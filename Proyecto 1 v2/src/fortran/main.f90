@@ -27,14 +27,14 @@ program main
     salto_linea = .false.
 
     ! Asignamos un número de unidad válido
-    unit_number = 12
+    unit_number = 20
 
     ! Abrir el archivo .ORG
-    open(unit=unit_number, file=trim(filename), status='old', action='read', iostat=iostat_code)
-    if (iostat_code /= 0) then
-        print *, 'Error al abrir el archivo:', filename
-        stop
-    end if
+    open(unit=unit_number, file=trim(filename), status='unknown', action='read', iostat=iostat_code)
+    ! if (iostat_code /= 0) then
+    !     print *, 'Error al abrir el archivo:', filename
+    !     stop
+    ! end if
 
     ! Leer el archivo línea por línea
     do
@@ -85,8 +85,15 @@ program main
 
     ! Cerrar el archivo
     close(unit_number)
+        if (size(errors) > 0) then
+            call generarHTMLErrores(errors)
+            print *, 'Analisis lexico con errores. Generando reportes...'
+        else
+            call generarHTMLTokens(tokens)
+        end if
 
-        call generarHTMLErrores(errors) 
+    
+    
         call generarHTMLTokens(tokens)
         print *, 'Analisis lexico completado. Generando reportes..'
 end program main

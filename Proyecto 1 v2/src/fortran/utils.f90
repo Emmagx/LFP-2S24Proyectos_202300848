@@ -24,12 +24,7 @@ contains
     end subroutine clearBuffer
 
     ! Función para verificar si el carácter es un delimitador especial
-    logical function isSpecialChar(c)
-        implicit none
-        character(len=1), intent(in) :: c
 
-        isSpecialChar = (c == ' ' .or. c == '\t' .or. c == '\n' )
-    end function isSpecialChar
 
     ! Función para verificar si el buffer es una palabra reservada
     character(len=100) function isReservedWord(buffer_)
@@ -51,6 +46,12 @@ contains
         isReservedWord = "PALABRA_RESERVADA"
     case ("bandera")
         isReservedWord = "PALABRA_RESERVADA"
+    case ("\t")
+        isReservedWord = "TAB"    
+    case ("\n")
+        isReservedWord = "Salto de linea"
+    case ("")
+        isReservedWord = "ESPACIO"
     case default
         isReservedWord = "ERROR"
     end select
@@ -154,15 +155,15 @@ end function isReservedWord
         ! Escribir la estructura HTML
         write(unit_number, '(A)') '<!DOCTYPE html>'
         write(unit_number, '(A)') '<html lang="es">'
-        write(unit_number, '(A)') '<head><meta charset="UTF-8"><title>Reporte de Errores Léxicos</title></head>'
+        write(unit_number, '(A)') '<head><meta charset="UTF-8"><title>Reporte de Errores Lexicos</title></head>'
         write(unit_number, '(A)') '<body>'
-        write(unit_number, '(A)') '<h1>Reporte de Errores Léxicos</h1>'
+        write(unit_number, '(A)') '<h1>Reporte de Errores Lexicos</h1>'
         write(unit_number, '(A)') '<table border="1">'
         write(unit_number, '(A)') '<tr><th>Mensaje</th><th>Tipo</th><th>Linea</th><th>Columna</th></tr>'
         
         ! Recorrer los errores y escribir cada uno en una fila de la tabla
         do i = 1, size(errors)
-            if (trim(errors(i)%mensaje) /= '') then
+            if (trim(errors(i)%mensaje) /= ' ' .or. trim(errors(i)%tipo) /=' ') then
                 write(linea_str, '(I5)') errors(i)%linea
                 write(columna_str, '(I5)') errors(i)%columna
                 write(unit_number, '(A, A, A, A)') &
@@ -181,6 +182,7 @@ end function isReservedWord
     
         print *, 'Reporte de errores generado en reporte_errores.html'
     end subroutine generarHTMLErrores
+    
     
 
 end module utils

@@ -158,7 +158,7 @@ subroutine processBuffer(buffer_, errors, tokens, linea, columna)
     character(len=100) :: tokenType
     ! Verificar si el contenido del buffer es una palabra reservada
     tokenType = isReservedWord(buffer_)
-
+    
     if (tokenType == "ERROR") then
         print *, "Nuevo Error"
         call addError(errors, "error Sintaxix", buffer_, linea, columna)

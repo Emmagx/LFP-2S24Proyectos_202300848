@@ -1,4 +1,5 @@
 module ErrorModule
+
     implicit none
 
     ! Definimos el tipo Error
@@ -39,16 +40,18 @@ module ErrorModule
         integer :: n
     
         ! Inicializar el error
-        call initError(mensaje, buffer_, linea, columna, e)
-        ! Verificar si el arreglo de errores está asignado
-        if (.not. allocated(errors)) then
-            allocate(errors(1))
-            errors(1) = e
-        else
-            ! Añadir el error al array
-            n = size(errors)
-            call extendArrayErrores(errors)
-            errors(n+1) = e
+        if (.not. isSpecialChar(mensaje)) then
+            call initError(mensaje, buffer_, linea, columna, e)
+            ! Verificar si el arreglo de errores está asignado
+            if (.not. allocated(errors)) then
+                allocate(errors(1))
+                errors(1) = e
+            else
+                ! Añadir el error al array
+                n = size(errors)
+                call extendArrayErrores(errors)
+                errors(n+1) = e
+            end if
         end if
     end subroutine addError
     
@@ -66,5 +69,12 @@ module ErrorModule
         errors = temp
         
     end subroutine extendArrayErrores
+
+    logical function isSpecialChar(c)
+        implicit none
+        character(len=1), intent(in) :: c
+
+        isSpecialChar = (c == ' ' .or. c == '\t' .or. c == '\n' .or. c == '')
+    end function isSpecialChar
 
 end module ErrorModule

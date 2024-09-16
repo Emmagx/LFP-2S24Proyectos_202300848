@@ -32,19 +32,19 @@ contains
     character(len=100), intent(in) :: buffer_
     print *, "Buffer: ", buffer_
     select case (trim(buffer_))
-    case ("pais")
+    case ("pais", "Pais", "PAIS")
         isReservedWord = "PALABRA_RESERVADA"
-    case ("continente")
+    case ("continente", "Continente", "CONTINENTE")
         isReservedWord = "PALABRA_RESERVADA"
-    case ("grafica")
+    case ("grafica", "Grafica", "GRAFICA")
         isReservedWord = "PALABRA_RESERVADA"
-    case ("nombre")
+    case ("nombre", "Nombre", "NOMBRE")
         isReservedWord = "PALABRA_RESERVADA"
-    case ("poblacion")
+    case ("poblacion", "Poblacion", "POBLACION")
         isReservedWord = "PALABRA_RESERVADA"
-    case ("saturacion")
+    case ("saturacion", "Saturacion", "SATURACION")
         isReservedWord = "PALABRA_RESERVADA"
-    case ("bandera")
+    case ("bandera", "Bandera", "BANDERA")
         isReservedWord = "PALABRA_RESERVADA"
     case ("\t")
         isReservedWord = "TAB"    

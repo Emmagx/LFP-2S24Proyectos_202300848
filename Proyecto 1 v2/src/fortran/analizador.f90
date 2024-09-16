@@ -16,21 +16,20 @@ subroutine state0(current_char, buffer_, tokens, errors, linea, columna, estado,
     integer, intent(inout) :: linea, columna
     integer, intent(inout) :: estado
     logical, intent(in) :: salto_linea
-    print *, 'Estado 0 :', current_char, ' Buffer: ', buffer_, ' Linea: ', linea, ' Columna: ', columna
-    ! Ignorar solo espacios en blanco, no saltos de línea
-    if (current_char == ' ' .or. current_char == new_line('A')) then
-        ! Si el buffer no está vacío, procesarlo antes de ignorar el espacio
+
+    ! Ignorar espacios en blanco y caracteres especiales
+    if (isSpecialChar(current_char)) then
+        ! Si el buffer no está vacío, procesarlo antes de ignorar el carácter especial
         if (len_trim(buffer_) > 0) then
             call processBuffer(buffer_, errors, tokens, linea, columna)
         end if
         call clearBuffer(buffer_)
         return
     end if
-    
-    ! Si es un delimitador, procesar lo que hay en el buffer y luego manejar el delimitador
+
+    ! Procesar otros caracteres como delimitadores
     if (current_char == '"') then
-        ! Cambiar al estado de cadena
-        estado = 2  ! Cambia esto según el número del estado de cadena que tengas definido
+        estado = 2
         call stateCadena(current_char, buffer_, tokens, errors, linea, columna, estado)
     else if (current_char == '{') then
         if (len_trim(buffer_) > 0) then
@@ -74,7 +73,6 @@ subroutine state1(current_char, buffer_, tokens, errors, linea, columna, estado,
     type(Error), allocatable, intent(inout) :: errors(:)
     integer, intent(inout) :: linea, columna, estado
     integer, intent(inout) :: i 
-    character(len=100) :: tokenType
     print *, 'Estado 1 :', current_char, ' Buffer: ', buffer_, ' Linea: ', linea, ' Columna: ', columna
     ! Verificar si es alfanumérico
     if ((current_char >= 'a' .and. current_char <= 'z') .or. &

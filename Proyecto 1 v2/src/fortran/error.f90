@@ -74,7 +74,8 @@ module ErrorModule
         implicit none
         character(len=1), intent(in) :: c
 
-        isSpecialChar = (c == ' ' .or. c == '\t' .or. c == '\n' .or. c == '')
+        isSpecialChar = (c == ' ' .or. c == CHAR(9) .or. c == CHAR(10))
     end function isSpecialChar
+
 
 end module ErrorModule

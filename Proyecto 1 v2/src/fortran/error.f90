@@ -4,7 +4,7 @@ module ErrorModule
 
     ! Definimos el tipo Error
     type :: Error
-        character(len=20) :: mensaje
+        character(len=20) :: descripcion
         character(len=20) :: tipo
         integer :: linea
         integer :: columna
@@ -12,36 +12,36 @@ module ErrorModule
 
     contains 
 
-    subroutine initError(mensaje, tipo, linea, columna, e)
+    subroutine initError(descripcion, tipo, linea, columna, e)
         implicit none
-        character(len=*), intent(in) :: mensaje, tipo
+        character(len=*), intent(in) :: descripcion, tipo
         integer, intent(in) :: linea, columna
         type(Error), intent(inout) :: e
 
         ! limpiar el error
-        e%mensaje = ""
+        e%descripcion = ""
         e%tipo = ""
         e%linea = 0
         e%columna = 0
 
         ! asignar valores al error
-        e%mensaje = trim(tipo)
-        e%tipo = trim(mensaje)
+        e%descripcion = trim(tipo)
+        e%tipo = trim(descripcion)
         e%linea = linea
         e%columna = columna
     end subroutine initError
 
-    subroutine addError(errors, mensaje, buffer_, linea, columna)
+    subroutine addError(errors, descripcion, buffer_, linea, columna)
         implicit none
         type(Error), allocatable, intent(inout) :: errors(:)
-        character(len=*), intent(in) :: mensaje, buffer_
+        character(len=*), intent(in) :: descripcion, buffer_
         integer, intent(in) :: linea, columna
         type(Error) :: e
         integer :: n
     
         ! Inicializar el error
-        if (.not. isSpecialChar(mensaje)) then
-            call initError(mensaje, buffer_, linea, columna, e)
+        if (.not. isSpecialChar(descripcion)) then
+            call initError(descripcion, buffer_, linea, columna, e)
             if (.not. allocated(errors)) then
                 allocate(errors(1))
                 errors(1) = e

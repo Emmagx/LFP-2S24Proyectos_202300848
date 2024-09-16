@@ -139,15 +139,15 @@ end function isReservedWord
         write(unit_number, '(A)') '<body>'
         write(unit_number, '(A)') '<h1>Reporte de Errores Lexicos</h1>'
         write(unit_number, '(A)') '<table border="1">'
-        write(unit_number, '(A)') '<tr><th>Mensaje</th><th>Tipo</th><th>Linea</th><th>Columna</th></tr>'
+        write(unit_number, '(A)') '<tr><th>descripcion</th><th>Tipo</th><th>Linea</th><th>Columna</th></tr>'
         
         ! Recorrer los errores y escribir cada uno en una fila de la tabla
         do i = 1, size(errors)
-            if (trim(errors(i)%mensaje) /= ' ' .or. trim(errors(i)%tipo) /=' ') then
+            if (trim(errors(i)%descripcion) /= ' ' .or. trim(errors(i)%tipo) /=' ') then
                 write(linea_str, '(I5)') errors(i)%linea
                 write(columna_str, '(I5)') errors(i)%columna
                 write(unit_number, '(A, A, A, A)') &
-                    '<tr><td>', trim(errors(i)%mensaje), '</td><td>', trim(errors(i)%tipo), &
+                    '<tr><td>', trim(errors(i)%descripcion), '</td><td>', trim(errors(i)%tipo), &
                     '</td><td>', trim(linea_str), '</td><td>', trim(columna_str), '</td></tr>'
             end if
         end do

@@ -14,6 +14,7 @@ def extraer_datos_tabla(html_content):
         celdas_limpias = [re.sub(r'<.*?>', '', celda).strip() for celda in celdas]
         if celdas_limpias:
             datos.append(celdas_limpias)
+    print(datos)  # Agregar esta línea para depurar los datos extraídos
     return datos
 
 def analizar(text_input, graph_label, tree):
@@ -38,8 +39,13 @@ def analizar(text_input, graph_label, tree):
         limpiar_salida(tree, graph_label)
 
         if os.path.exists(ruta_reporte_errores) and os.path.getsize(ruta_reporte_errores) > 0:
-            mostrar_errores(ruta_reporte_errores, tree)
+            print("Archivo de errores encontrado")  # Depuración
+            if os.path.getsize(ruta_reporte_errores) > 0:
+                mostrar_errores(ruta_reporte_errores, tree)
+            else:
+                print("Archivo de errores está vacío")  # Depuración
         else:
+            print("No se encontró el archivo de errores")  # Depuración
             if os.path.exists(ruta_reporte_tokens):
                 datos = extraer_datos_tabla(abrir_archivo_html(ruta_reporte_tokens))
                 generar_grafico(datos, graph_label)
@@ -52,6 +58,8 @@ def analizar(text_input, graph_label, tree):
         messagebox.showerror("Error", "No se encontró el archivo de salida generado por el analizador léxico.")
     except Exception as e:
         messagebox.showerror("Error", f"Se produjo un error inesperado: {e}")
+
+
 
 def eliminar_archivos(*rutas):
     for ruta in rutas:
@@ -74,10 +82,12 @@ def limpiar_salida(tree, graph_label):
 
 def mostrar_errores(ruta_reporte_errores, tree):
     contenido_html = abrir_archivo_html(ruta_reporte_errores)
+    print(contenido_html)  # Agregar esta línea para depurar el contenido
     datos = extraer_datos_tabla(contenido_html)
     for fila in datos:
         tree.insert('', 'end', values=fila)
     tree.pack(padx=10, pady=10, expand=True, fill='both')
+
 
 def generar_grafico(datos, graph_label):
     dot = graphviz.Digraph(format='png')

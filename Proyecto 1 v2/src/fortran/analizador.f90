@@ -118,6 +118,7 @@ subroutine stateNumero(current_char, buffer_, tokens, errors, linea, columna, es
 end subroutine stateNumero
 
 
+
     ! Estado para manejar cadenas
 subroutine stateCadena(current_char, buffer_, tokens, errors, linea, columna, estado)
     implicit none

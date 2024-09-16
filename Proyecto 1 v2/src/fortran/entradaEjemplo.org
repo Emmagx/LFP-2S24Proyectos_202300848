@@ -41,7 +41,7 @@ Nombre: "5rchiv0 d3 3ntr4d4 #1 ";
 			Pais:{
 				 Nombre: "Nauru"; 
 				 Poblacion: 9945; 
-				 Saturacion: 2%; 
+				 Saturacion: 20%; 
 				 Bandera: ".\Bandera\nr.png";
 			}
 			Pais:{
@@ -83,7 +83,7 @@ Nombre: "5rchiv0 d3 3ntr4d4 #1 ";
 			Pais:{
 				 Nombre: "Paraguay"; 
 				 Poblacion: 6783374; 
-				 Saturacion: 20%; 
+				 Saturacion: 2%; 
 				 Bandera: ".\Bandera\py.png";
 			}
 			Pais:{

@@ -54,7 +54,7 @@ program main
             else
                 salto_linea = .false.
             end if
-            if (current_char >= '0' .and. current_char <= '9' .and. buffer_>= '0' )then
+            if (current_char >= '0' .and. current_char <= '9' .or. index(buffer_,'%')>0 )then
                 estado = 8
 
             endif

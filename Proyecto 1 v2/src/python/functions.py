@@ -84,9 +84,30 @@ def mostrar_errores(ruta_reporte_errores, tree):
     contenido_html = abrir_archivo_html(ruta_reporte_errores)
     print(contenido_html)  # Agregar esta línea para depurar el contenido
     datos = extraer_datos_tabla(contenido_html)
+    
+    # Configurar las columnas de la tabla
+    tree['columns'] = ('Caracter', 'Descripcion', 'Tipo', 'Fila', 'Columna')
+    tree.heading('#0', text='ID')  # Puedes añadir una columna ID si lo deseas
+    tree.heading('Caracter', text='Caracter')
+    tree.heading('Descripcion', text='Descripcion')
+    tree.heading('Tipo', text='Tipo')
+    tree.heading('Fila', text='Fila')
+    tree.heading('Columna', text='Columna')
+    
+    # Ajustar el ancho de las columnas si es necesario
+    tree.column('#0', width=50)
+    tree.column('Caracter', width=100)
+    tree.column('Descripcion', width=200)
+    tree.column('Tipo', width=100)
+    tree.column('Fila', width=100)
+    tree.column('Columna', width=100)
+    
+    # Insertar datos en la tabla
     for fila in datos:
         tree.insert('', 'end', values=fila)
+    
     tree.pack(padx=10, pady=10, expand=True, fill='both')
+
 
 
 def generar_grafico(datos, graph_label):

@@ -42,7 +42,6 @@ module ErrorModule
         ! Inicializar el error
         if (.not. isSpecialChar(mensaje)) then
             call initError(mensaje, buffer_, linea, columna, e)
-            ! Verificar si el arreglo de errores está asignado
             if (.not. allocated(errors)) then
                 allocate(errors(1))
                 errors(1) = e

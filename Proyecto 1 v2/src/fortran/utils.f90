@@ -4,7 +4,6 @@ module utils
     
 contains
 
-    ! Función para agregar un carácter al buffer
     subroutine addtoBuffer(current_char, buffer_, columna)
         implicit none
         character(len=1), intent(in) :: current_char
@@ -15,7 +14,6 @@ contains
         columna = columna + 1
     end subroutine addtoBuffer
 
-    ! Función para limpiar el buffer
     subroutine clearBuffer(buffer_)
         implicit none
         character(len=100), intent(inout) :: buffer_
@@ -23,10 +21,7 @@ contains
         buffer_ = ""
     end subroutine clearBuffer
 
-    ! Función para verificar si el carácter es un delimitador especial
 
-
-    ! Función para verificar si el buffer es una palabra reservada
     character(len=100) function isReservedWord(buffer_)
     implicit none
     character(len=100), intent(in) :: buffer_
@@ -57,10 +52,6 @@ contains
     end select
 end function isReservedWord
 
-
-
-
-    ! Función para retroceder en el buffer
     subroutine goBack(i, columna, buffer_)
         implicit none
         integer, intent(inout) :: i, columna
@@ -89,22 +80,14 @@ end function isReservedWord
         integer :: i, unit_number
         integer :: max_len_desc, max_len_tipo
         character(len=100) :: linea_str, columna_str
-        
-        ! Inicializar los tamaños máximos
         max_len_desc = 0
         max_len_tipo = 0
-        
-        ! Asignar un número de unidad válido
         unit_number = 15
-        
-        ! Abrir el archivo HTML para escritura
         open(unit=unit_number, file='reporte_tokens.html', status='unknown', action='write', iostat=i)
         if (i /= 0) then
             print *, 'Error al abrir el archivo reporte_tokens.html'
             stop
         end if
-    
-        ! Escribir la estructura HTML
         write(unit_number, '(A)') '<!DOCTYPE html>'
         write(unit_number, '(A)') '<html lang="es">'
         write(unit_number, '(A)') '<head><meta charset="UTF-8"><title>Reporte de Tokens</title></head>'
@@ -112,8 +95,6 @@ end function isReservedWord
         write(unit_number, '(A)') '<h1>Reporte de Tokens</h1>'
         write(unit_number, '(A)') '<table border="1">'
         write(unit_number, '(A)') '<tr><th>Lexema</th><th>Tipo</th><th>Linea</th><th>Columna</th></tr>'
-        
-        ! Recorrer los tokens y escribir cada uno en una fila de la tabla
         do i = 1, size(tokens)
             if (trim(tokens(i)%descripcion) /= '') then
                 write(linea_str, '(I5)') tokens(i)%linea
@@ -123,13 +104,9 @@ end function isReservedWord
                     '</td><td>', trim(linea_str), '</td><td>', trim(columna_str), '</td></tr>'
             end if
         end do
-        
-        ! Cerrar la tabla y la estructura HTML
         write(unit_number, '(A)') '</table>'
         write(unit_number, '(A)') '</body>'
         write(unit_number, '(A)') '</html>'
-        
-        ! Cerrar el archivo
         close(unit_number)
         
         print *, 'Reporte de tokens generado en reporte_tokens.html'
@@ -141,11 +118,7 @@ end function isReservedWord
         type(Error), allocatable, intent(in) :: errors(:)
         integer :: i, unit_number
         character(len=100) :: linea_str, columna_str
-    
-        ! Asignar un número de unidad válido
         unit_number = 13
-    
-        ! Abrir el archivo HTML para escritura
         open(unit=unit_number, file='reporte_errores.html', status='unknown', action='write', iostat=i)
         if (i /= 0) then
             print *, 'Error al abrir el archivo reporte_errores.html'

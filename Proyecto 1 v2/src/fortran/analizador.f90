@@ -6,7 +6,6 @@ module lexer
 
 contains
 
-    ! Estado 0
 subroutine state0(current_char, buffer_, tokens, errors, linea, columna, estado, salto_linea)
     implicit none
     character(len=1), intent(in) :: current_char
@@ -19,7 +18,6 @@ subroutine state0(current_char, buffer_, tokens, errors, linea, columna, estado,
 
     ! Ignorar espacios en blanco y caracteres especiales
     if (isSpecialChar(current_char)) then
-        ! Si el buffer no está vacío, procesarlo antes de ignorar el carácter especial
         if (len_trim(buffer_) > 0) then
             call processBuffer(buffer_, errors, tokens, linea, columna)
         end if
@@ -61,9 +59,9 @@ subroutine state0(current_char, buffer_, tokens, errors, linea, columna, estado,
         return
     end if
 
-    ! Añadir el carácter al buffer_
     call addtoBuffer(current_char, buffer_, columna)
 end subroutine state0
+
     ! Estado 1: Identificadores y palabras reservadas
 subroutine state1(current_char, buffer_, tokens, errors, linea, columna, estado, i)
     implicit none
@@ -74,24 +72,21 @@ subroutine state1(current_char, buffer_, tokens, errors, linea, columna, estado,
     integer, intent(inout) :: linea, columna, estado
     integer, intent(inout) :: i 
     print *, 'Estado 1 :', current_char, ' Buffer: ', buffer_, ' Linea: ', linea, ' Columna: ', columna
-    ! Verificar si es alfanumérico
+
     if ((current_char >= 'a' .and. current_char <= 'z') .or. &
         (current_char >= 'A' .and. current_char <= 'Z')) then
-        ! Añadir el carácter al buffer_
         call addtoBuffer(current_char, buffer_, columna)
     else
         call processBuffer(buffer_, errors, tokens, linea, columna)
         if (.not. isSpecialChar(current_char)) then
             call goBack(i, columna, buffer_)
         end if
-        ! Limpiar el buffer después de agregar el token
         call clearBuffer(buffer_)
         
-        ! Solo ahora volvemos al estado 0
         call iraState(estado, 0, buffer_)
     end if
 end subroutine state1
-    ! Estado para manejar números y porcentajes
+
 subroutine stateNumero(current_char, buffer_, tokens, errors, linea, columna, estado, i)
     implicit none
     character(len=1), intent(in) :: current_char
@@ -117,9 +112,6 @@ subroutine stateNumero(current_char, buffer_, tokens, errors, linea, columna, es
     end if
 end subroutine stateNumero
 
-
-
-    ! Estado para manejar cadenas
 subroutine stateCadena(current_char, buffer_, tokens, errors, linea, columna, estado)
     implicit none
     character(len=1), intent(in) :: current_char
@@ -129,21 +121,19 @@ subroutine stateCadena(current_char, buffer_, tokens, errors, linea, columna, es
     integer, intent(inout) :: linea, columna, estado
     logical :: cadenaAbierta
     print *, 'Estado cadena: ', current_char, ' Buffer: ', buffer_, 'Linea:', linea, 'Columna:', columna
-    ! Comenzamos la cadena al encontrar la primera comilla
     if (current_char == '"') then
         if (len_trim(buffer_) == 0) then
-            ! Primera comilla encontrada, marcamos como apertura de cadena
             cadenaAbierta = .true.
             
         else
-            ! Si ya tenemos una comilla en el buffer, entonces es la de cierre
-            call addtoBuffer(current_char, buffer_, columna)  ! Almacenar la comilla de cierre
-            call addToken(tokens, buffer_, "CADENA", linea, columna)  ! Almacenar toda la cadena como token
-            call clearBuffer(buffer_)  ! Limpiar el buffer después de almacenar el token
-            call iraState(estado, 0, buffer_)  ! Volver al estado 0 después de cerrar la cadena
+
+            call addtoBuffer(current_char, buffer_, columna)  
+            call addToken(tokens, buffer_, "CADENA", linea, columna)  
+            call clearBuffer(buffer_)  
+            call iraState(estado, 0, buffer_) 
         end if
     else
-        ! Si es parte del contenido de la cadena, lo agregamos al buffer
+        
         call addtoBuffer(current_char, buffer_, columna)
     end if
 end subroutine stateCadena
@@ -155,7 +145,6 @@ subroutine processBuffer(buffer_, errors, tokens, linea, columna)
     type(Error), allocatable, intent(inout) :: errors(:)
     integer, intent(in) :: linea, columna
     character(len=100) :: tokenType
-    ! Verificar si el contenido del buffer es una palabra reservada
     tokenType = isReservedWord(buffer_)
     
     if (tokenType == "ERROR") then

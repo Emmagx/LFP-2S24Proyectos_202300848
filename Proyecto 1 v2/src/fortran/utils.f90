@@ -28,19 +28,26 @@ contains
     print *, "Buffer: ", buffer_
     select case (trim(buffer_))
     case ("pais", "Pais", "PAIS")
+        !isReservedWord = "pais"
         isReservedWord = "PALABRA_RESERVADA"
     case ("continente", "Continente", "CONTINENTE")
+        !isReservedWord = "continente"
         isReservedWord = "PALABRA_RESERVADA"
     case ("grafica", "Grafica", "GRAFICA")
+        !isReservedWord = "grafica"
         isReservedWord = "PALABRA_RESERVADA"
     case ("nombre", "Nombre", "NOMBRE")
         isReservedWord = "PALABRA_RESERVADA"
+        !isReservedWord = "nombre"
     case ("poblacion", "Poblacion", "POBLACION")
         isReservedWord = "PALABRA_RESERVADA"
+        !isReservedWord = "poblacion"
     case ("saturacion", "Saturacion", "SATURACION")
         isReservedWord = "PALABRA_RESERVADA"
+        !isReservedWord = "saturacion"
     case ("bandera", "Bandera", "BANDERA")
         isReservedWord = "PALABRA_RESERVADA"
+        !isReservedWord = "bandera"
     case ("\t")
         isReservedWord = "TAB"    
     case ("\n")

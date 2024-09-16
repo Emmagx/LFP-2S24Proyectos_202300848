@@ -15,9 +15,7 @@ def extraer_datos_tabla(html_content):
         celdas = re.findall(r'<td>(.*?)</td>', fila, re.DOTALL)
         # Limpiar los datos, eliminando etiquetas HTML restantes
         celdas_limpias = [re.sub(r'<.*?>', '', celda).strip() for celda in celdas]
-        
-        # Verificar si la primera columna está vacía o solo contiene espacios
-        if celdas_limpias and celdas_limpias[0]:
+        if celdas_limpias:
             datos.append(celdas_limpias)
     
     return datos
@@ -51,7 +49,6 @@ def analizar():
         for row in tree.get_children():
             tree.delete(row)
 
-        # Verificar si 'reporte_errores.html' tiene contenido
         if os.path.exists(ruta_reporte_errores) and os.path.getsize(ruta_reporte_errores) > 0:
             # Leer y procesar el contenido de 'reporte_errores.html'
             with open(ruta_reporte_errores, "r") as file:
@@ -60,12 +57,6 @@ def analizar():
                 # Insertar datos en el Treeview
                 for fila in datos:
                     tree.insert('', 'end', values=fila)
-            # Mostrar columnas del Treeview
-            tree.heading("Col1", text="Error/Tokens")
-            tree.heading("Col2", text="Detalle")
-            tree.heading("Col3", text="Línea")
-            tree.heading("Col4", text="Columna")
-            tree.pack(padx=10, pady=10, expand=True, fill='both')
         else:
             # Leer y procesar el contenido de 'reporte_tokens.html'
             if os.path.exists(ruta_reporte_tokens):
@@ -75,17 +66,15 @@ def analizar():
                     # Insertar datos en el Treeview
                     for fila in datos:
                         tree.insert('', 'end', values=fila)
-                # Mostrar columnas del Treeview
-                tree.heading("Col1", text="Token")
-                tree.heading("Col2", text="Detalle")
-                tree.heading("Col3", text="Línea")
-                tree.heading("Col4", text="Columna")
-                tree.pack(padx=10, pady=10, expand=True, fill='both')
             else:
                 messagebox.showinfo("Información", "No se generó ningún reporte de tokens ni de errores.")
-                # Ocultar columnas del Treeview si no hay datos
-                tree.pack_forget()
         
+        # Solo mostrar la tabla si se encontraron errores
+        if os.path.exists(ruta_reporte_errores) and os.path.getsize(ruta_reporte_errores) > 0:
+            tree.pack(padx=10, pady=10, expand=True, fill='both')
+        else:
+            tree.pack_forget()
+
     except subprocess.CalledProcessError as e:
         messagebox.showerror("Error", f"Hubo un error al ejecutar el analizador léxico: {e}")
     except FileNotFoundError:
@@ -108,11 +97,11 @@ analyze_button.pack(pady=5)
 
 # Crear Treeview para mostrar los datos como una tabla
 tree = ttk.Treeview(root, columns=("Col1", "Col2", "Col3", "Col4"), show="headings")
-tree.heading("Col1", text="Columna 1")
-tree.heading("Col2", text="Columna 2")
-tree.heading("Col3", text="Columna 3")
-tree.heading("Col4", text="Columna 4")
-tree.pack(padx=10, pady=10, expand=True, fill='both')
+tree.heading("Col1", text="Error/Tokens")
+tree.heading("Col2", text="Detalle")
+tree.heading("Col3", text="Línea")
+tree.heading("Col4", text="Columna")
+tree.pack_forget()  # Inicialmente, no mostrar la tabla
 
 # Ejecutar la aplicación
 root.mainloop()

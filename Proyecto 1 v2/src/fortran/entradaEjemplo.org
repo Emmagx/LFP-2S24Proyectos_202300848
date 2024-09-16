@@ -25,7 +25,7 @@ Grafica:{
 			||	 Poblacion: 86127000; 
 				 Saturacion: 21%; 
 				 Bandera: ".\Bandera\eg.png";
-			}Â´Â´
+			}´´
 	}
 	Continente:{/
 		Nombre: "america del norte";
@@ -40,7 +40,7 @@ Grafica:{
 				 Poblacion: 349728; 
 				 Saturacion: 13%; 
 				 Bandera: ".\Bandera\bz.png";
-			}Â°
+			}°
 	}#
 	Continente:{
 		Nombre: "America Del Sur";
@@ -55,6 +55,6 @@ Grafica:{
 				 Poblacion: 6783374; 
 				 Saturacion: 83%; 
 				 Bandera: ".\Bandera\py.png";
-			}Â¿
+			}¿
 	}
 }

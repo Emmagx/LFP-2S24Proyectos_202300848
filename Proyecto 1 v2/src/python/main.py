@@ -32,19 +32,22 @@ def analizar():
 
     # Ruta al archivo que será modificado por el texto de entrada
     ruta_entrada = "../fortran/entradaEjemplo.org"
-    
+    ruta_reporte_errores = "reporte_errores.html"
+    ruta_reporte_tokens = "reporte_tokens.html"
+    if os.path.exists(ruta_reporte_errores):
+        os.remove(ruta_reporte_errores)
+    if os.path.exists(ruta_reporte_tokens):
+        os.remove(ruta_reporte_tokens)
     # Sobrescribir el archivo 'entradaEjemplo.org' con el contenido del cuadro de entrada
     try:
         with open(ruta_entrada, "w") as file:
             file.write(texto_entrada)
-        
+        os.chdir("../fortran") 
         # Ejecutar el programa Fortran con subprocess
-        subprocess.run(["../fortran/main.exe"], check=True)
+        subprocess.run(["main.exe"], check=True)
         
         # Variables para las rutas de los reportes
-        ruta_reporte_errores = "../fortran/reporte_errores.html"
-        ruta_reporte_tokens = "../fortran/reporte_tokens.html"
-        
+
         # Limpiar la tabla existente
         for row in tree.get_children():
             tree.delete(row)

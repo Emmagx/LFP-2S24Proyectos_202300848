@@ -1,60 +1,42 @@
 Grafica:{
-	Nombre: "5rchiv0 d3 3ntr4d4 #1 ";
-	Continente:{@
-		Nombre: "africa";
-			Pais:{
-				 Nombre: "Argelia"; 
-				 Poblacion: 38700000; 
-				 Saturacion: 32%; 
-				 Bandera: ".\Bandera\dz.png";
-			}$
-			Pais:{
-				 Nombre: "Zimbabue"; 
-				 Poblacion: 12973808; 
-				 Saturacion: 7%; 
-				 Bandera: ".\Bandera\zw.png";
-			}
-			Pais:{
-				 Nombre: "Tunez"; 
-				 Poblacion: 10886500; 
-				 Saturacion: 50%; 
-				 Bandera: ".\Bandera\tn.png";
-			}
-			Pais:{
-				 Nombre: "Egipto"; 
-			||	 Poblacion: 86127000; 
-				 Saturacion: 21%; 
-				 Bandera: ".\Bandera\eg.png";
-			}´´
-	}
-	Continente:{/
-		Nombre: "america del norte";
-			Pais:{
-				 Nombre: "Jamaica"; 
-				 Poblacion: 2711476; 
-				 Saturacion: 70%; 
-				 Bandera: ".\Bandera\jm.png";
-			}
-			Pais:{
-				 Nombre: "Belice"; 
-				 Poblacion: 349728; 
-				 Saturacion: 13%; 
-				 Bandera: ".\Bandera\bz.png";
-			}°
-	}#
+	Nombre:"Corto #1";
 	Continente:{
-		Nombre: "America Del Sur";
-			Pais:{
-				 Nombre: "Brasil"; 
-				 Poblacion: 201032714; 
-				 Saturacion: 19%; 
-				 Bandera: ".\Bandera\br.png";
-			}
-			Pais:{
-				 Nombre: "Paraguay"; 
-				 Poblacion: 6783374; 
-				 Saturacion: 83%; 
-				 Bandera: ".\Bandera\py.png";
-			}¿
+	Nombre: "America del Norte";
+		Pais:{
+		Nombre:"Canada";
+			Poblacion: 35295;
+			Saturacion:75%;
+			Bandera: ".\imagen\Canada.png";
+		}
+		Pais:{
+		Nombre:"Mexico";
+			Poblacion: 119713;
+			Saturacion:35%;
+			Bandera: ".\imagen\Mexico.png";
+		}
+		Pais:{
+		Nombre:"Estados unidos";
+			Poblacion: 512300;
+			Saturacion:73%;
+			Bandera: ".\imagen\EEUU.png";
+		}
+	}
+	Continente:{
+	Nombre: "America del Sur";
+		Pais:{
+			Nombre:"Cabo verde";
+			Poblacion: 35000;
+			Saturacion:99%;
+			Bandera: ".\imagen\CaboVerde.png";
+		}
+	}
+	Continente:{
+	Nombre: "Oceania";
+		Pais:{
+			Nombre:"Indonesia";
+			Poblacion: 55000;
+			Saturacion:74%;
+			Bandera: ".\imagen\Indonesia.png";
+		}
 	}
 }

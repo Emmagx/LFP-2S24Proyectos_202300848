@@ -111,7 +111,7 @@ def construir_estructura_datos(datos):
                 estado = None
                 estadoNombre = None
             elif estado == 'BANDERA' and pais_actual:
-                pais_actual.bandera = lexema.strip('"')
+                pais_actual.bandera = 'images/'+ pais_actual.nombre + '.png'
                 print(f"Bandera del país actualizada: {pais_actual.bandera}")
                 estado = None
         

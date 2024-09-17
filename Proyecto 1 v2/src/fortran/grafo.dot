@@ -1,30 +1,54 @@
-// Nombre de la gráfica
+// "ModeloContinentalBeta"
 digraph {
-	grafico [label="Nombre de la gráfica" fillcolor=lightblue fontsize=16 shape=box style=bold]
-	AmericadelNorte [fillcolor=lightgreen shape=ellipse style=filled]
-	grafico -> AmericadelNorte
+	grafico [label="\"ModeloContinentalBeta\"" fillcolor=lightblue fontsize=16 shape=box style=bold]
+	Asia [fillcolor=lightgreen shape=ellipse style=filled]
+	grafico -> Asia
+	Japon [fillcolor=lightyellow shape=ellipse style=filled]
+	Asia -> Japon
+	Japon_saturacion [label="Saturación: 60%" fillcolor=yellow shape=box style=filled]
+	Japon -> Japon_saturacion
+	China [fillcolor=lightyellow shape=ellipse style=filled]
+	Asia -> China
+	China_saturacion [label="Saturación: 84%" fillcolor=red shape=box style=filled]
+	China -> China_saturacion
+	Korea [fillcolor=lightyellow shape=ellipse style=filled]
+	Asia -> Korea
+	Korea_saturacion [label="Saturación: 69%" fillcolor=orange shape=box style=filled]
+	Korea -> Korea_saturacion
+	America [fillcolor=lightgreen shape=ellipse style=filled]
+	grafico -> America
 	Canada [fillcolor=lightyellow shape=ellipse style=filled]
-	AmericadelNorte -> Canada
-	Canada_saturacion [label="Saturación: 75%" fillcolor=orange shape=box style=filled]
+	America -> Canada
+	Canada_saturacion [label="Saturación: 44%" fillcolor=green shape=box style=filled]
 	Canada -> Canada_saturacion
-	Mexico [fillcolor=lightyellow shape=ellipse style=filled]
-	AmericadelNorte -> Mexico
-	Mexico_saturacion [label="Saturación: 35%" fillcolor=green shape=box style=filled]
-	Mexico -> Mexico_saturacion
-	Estadosunidos [fillcolor=lightyellow shape=ellipse style=filled]
-	AmericadelNorte -> Estadosunidos
-	Estadosunidos_saturacion [label="Saturación: 73%" fillcolor=orange shape=box style=filled]
-	Estadosunidos -> Estadosunidos_saturacion
-	AmericadelSur [fillcolor=lightgreen shape=ellipse style=filled]
-	grafico -> AmericadelSur
-	Caboverde [fillcolor=lightyellow shape=ellipse style=filled]
-	AmericadelSur -> Caboverde
-	Caboverde_saturacion [label="Saturación: 99%" fillcolor=red shape=box style=filled]
-	Caboverde -> Caboverde_saturacion
+	Europa [fillcolor=lightgreen shape=ellipse style=filled]
+	grafico -> Europa
+	Alemania [fillcolor=lightyellow shape=ellipse style=filled]
+	Europa -> Alemania
+	Alemania_saturacion [label="Saturación: 74%" fillcolor=orange shape=box style=filled]
+	Alemania -> Alemania_saturacion
+	Espana [fillcolor=lightyellow shape=ellipse style=filled]
+	Europa -> Espana
+	Espana_saturacion [label="Saturación: 45%" fillcolor=green shape=box style=filled]
+	Espana -> Espana_saturacion
+	Inglaterra [fillcolor=lightyellow shape=ellipse style=filled]
+	Europa -> Inglaterra
+	Inglaterra_saturacion [label="Saturación: 100%" fillcolor=red shape=box style=filled]
+	Inglaterra -> Inglaterra_saturacion
 	Oceania [fillcolor=lightgreen shape=ellipse style=filled]
 	grafico -> Oceania
-	Indonesia [fillcolor=lightyellow shape=ellipse style=filled]
-	Oceania -> Indonesia
-	Indonesia_saturacion [label="Saturación: 74%" fillcolor=orange shape=box style=filled]
-	Indonesia -> Indonesia_saturacion
+	IslasMarshall [fillcolor=lightyellow shape=ellipse style=filled]
+	Oceania -> IslasMarshall
+	IslasMarshall_saturacion [label="Saturación: 8%" fillcolor=white shape=box style=filled]
+	IslasMarshall -> IslasMarshall_saturacion
+	IslasSalomon [fillcolor=lightyellow shape=ellipse style=filled]
+	Oceania -> IslasSalomon
+	IslasSalomon_saturacion [label="Saturación: 60%" fillcolor=yellow shape=box style=filled]
+	IslasSalomon -> IslasSalomon_saturacion
+	Africa [fillcolor=lightgreen shape=ellipse style=filled]
+	grafico -> Africa
+	CaboVerde [fillcolor=lightyellow shape=ellipse style=filled]
+	Africa -> CaboVerde
+	CaboVerde_saturacion [label="Saturación: 43%" fillcolor=green shape=box style=filled]
+	CaboVerde -> CaboVerde_saturacion
 }

@@ -30,6 +30,7 @@ def analizar(text_input, graph_label, tree):
     ruta_reporte_errores = "reporte_errores.html"
     ruta_reporte_tokens = "reporte_tokens.html"
     ruta_grafico = "grafo.png"
+    tituloGrafica = "Sin titulo"
 
     eliminar_archivos(ruta_reporte_errores, ruta_reporte_tokens, ruta_grafico)
 
@@ -45,8 +46,8 @@ def analizar(text_input, graph_label, tree):
         else:
             if os.path.exists(ruta_reporte_tokens):
                 datos = extraer_datos_tabla(abrir_archivo_html(ruta_reporte_tokens))
-                continentes = construir_estructura_datos(datos)
-                generar_grafico(continentes, "Nombre de la gráfica")
+                continentes, tituloGrafica = construir_estructura_datos(datos)
+                generar_grafico(continentes, tituloGrafica)
                 mostrar_imagen(ruta_grafico, graph_label)
             else:
                 messagebox.showerror("Error", "No se encontró el archivo de tokens.")
@@ -64,6 +65,7 @@ def construir_estructura_datos(datos):
     pais_actual = None
     estado = None
     estadoNombre = None
+    tituloGrafica = "No titulo"
     for fila in datos:
         lexema = fila[0]
         tipo = fila[1]
@@ -73,7 +75,7 @@ def construir_estructura_datos(datos):
 
         if tipo == "PALABRA_RESERVADA":
             if lexema.lower() == "grafica":
-                continue
+                estado = "GRAFICA"
             elif lexema.lower() == "continente":
                 continente_actual = Continente(nombre="")
                 continentes.append(continente_actual)
@@ -95,9 +97,13 @@ def construir_estructura_datos(datos):
             continue
 
         elif tipo == "CADENA":
+            
             if estado == 'NOMBRE_CONTINENTE':
                 continente_actual.nombre = lexema.strip('"')
                 print(f"Nombre del continente actualizado: {continente_actual.nombre}")
+                estado = None
+            elif estado == "GRAFICA":
+                tituloGrafica = lexema
                 estado = None
             elif estado == 'NOMBRE_PAIS' or estadoNombre == 'NOMBRE_PAIS':
                 pais_actual.nombre = lexema.strip('"')
@@ -121,7 +127,7 @@ def construir_estructura_datos(datos):
                 print(f"Saturación del país actualizada: {pais_actual.saturacion}")
                 estado = None
 
-    return continentes
+    return continentes, tituloGrafica
 
 
 def eliminar_archivos(*rutas):

@@ -4,7 +4,9 @@ import subprocess
 import os
 import re
 from PIL import Image, ImageTk
-import graphviz
+from pais import Pais
+from continente import Continente
+from graphviz import Digraph
 
 def extraer_datos_tabla(html_content):
     filas = re.findall(r'<tr>(.*?)</tr>', html_content, re.DOTALL)
@@ -14,8 +16,8 @@ def extraer_datos_tabla(html_content):
         celdas_limpias = [re.sub(r'<.*?>', '', celda).strip() for celda in celdas]
         if celdas_limpias:
             datos.append(celdas_limpias)
-    print(datos)  # Agregar esta línea para depurar los datos extraídos
     return datos
+
 
 def analizar(text_input, graph_label, tree):
     texto_entrada = text_input.get("1.0", tk.END).strip()
@@ -27,7 +29,7 @@ def analizar(text_input, graph_label, tree):
     ruta_entrada = "../fortran/entradaEjemplo.org"
     ruta_reporte_errores = "reporte_errores.html"
     ruta_reporte_tokens = "reporte_tokens.html"
-    ruta_grafico = "grafico.png"
+    ruta_grafico = "grafo.png"
 
     eliminar_archivos(ruta_reporte_errores, ruta_reporte_tokens, ruta_grafico)
 
@@ -39,16 +41,13 @@ def analizar(text_input, graph_label, tree):
         limpiar_salida(tree, graph_label)
 
         if os.path.exists(ruta_reporte_errores) and os.path.getsize(ruta_reporte_errores) > 0:
-            print("Archivo de errores encontrado")  # Depuración
-            if os.path.getsize(ruta_reporte_errores) > 0:
-                mostrar_errores(ruta_reporte_errores, tree)
-            else:
-                print("Archivo de errores está vacío")  # Depuración
+            mostrar_errores(ruta_reporte_errores, tree)
         else:
-            print("No se encontró el archivo de errores")  # Depuración
             if os.path.exists(ruta_reporte_tokens):
                 datos = extraer_datos_tabla(abrir_archivo_html(ruta_reporte_tokens))
-                generar_grafico(datos, graph_label)
+                continentes = construir_estructura_datos(datos)
+                generar_grafico(continentes, "Nombre de la gráfica")
+                mostrar_imagen(ruta_grafico, graph_label)
             else:
                 messagebox.showerror("Error", "No se encontró el archivo de tokens.")
 
@@ -58,7 +57,67 @@ def analizar(text_input, graph_label, tree):
         messagebox.showerror("Error", "No se encontró el archivo de salida generado por el analizador léxico.")
     except Exception as e:
         messagebox.showerror("Error", f"Se produjo un error inesperado: {e}")
+        
+def construir_estructura_datos(datos):
+    continentes = []
+    continente_actual = None
+    pais_actual = None
+    estado = None
 
+    for fila in datos:
+        lexema = fila[0]
+        tipo = fila[1]
+
+        print(f"Detectada palabra reservada: {lexema}")
+        print(f"Estado actual: {estado}")
+
+        if tipo == "PALABRA_RESERVADA":
+            if lexema.lower() == "grafica":
+                continue
+            elif lexema.lower() == "continente":
+                continente_actual = Continente(nombre="")
+                continentes.append(continente_actual)
+                estado = 'NOMBRE_CONTINENTE'
+            elif lexema.lower() == "pais":
+                pais_actual = Pais(nombre="", poblacion=0, saturacion="", bandera="")
+                if continente_actual:
+                    continente_actual.agregar_pais(pais_actual)
+                estado = 'NOMBRE_PAIS'
+            elif lexema.lower() == "saturacion":
+                estado = 'SATURACION'
+            elif lexema.lower() == "poblacion":
+                estado = 'POBLACION'
+            elif lexema.lower() == "bandera":
+                estado = 'BANDERA'
+            continue
+
+        elif tipo == "CADENA":
+            if estado == 'NOMBRE_CONTINENTE':
+                continente_actual.nombre = lexema.strip('"')
+                print(f"Nombre del continente actualizado: {continente_actual.nombre}")
+                estado = None
+            elif estado == 'NOMBRE_PAIS':
+                pais_actual.nombre = lexema.strip('"')
+                print(f"Nombre del país actualizado: {pais_actual.nombre}")
+                estado = None
+            elif estado == 'BANDERA' and pais_actual:
+                pais_actual.bandera = lexema.strip('"')
+                print(f"Bandera del país actualizada: {pais_actual.bandera}")
+                estado = None
+        
+        elif tipo == "NUMERO_ENTERO":
+            if estado == 'POBLACION' and pais_actual:
+                pais_actual.poblacion = int(lexema.strip('"'))
+                print(f"Población del país actualizada: {pais_actual.poblacion}")
+                estado = None
+
+        elif tipo == "PORCENTAJE":
+            if estado == 'SATURACION' and pais_actual:
+                pais_actual.saturacion = int(lexema.strip('"'))
+                print(f"Saturación del país actualizada: {pais_actual.saturacion}")
+                estado = None
+
+    return continentes
 
 
 def eliminar_archivos(*rutas):
@@ -110,92 +169,39 @@ def mostrar_errores(ruta_reporte_errores, tree):
 
 
 
-def generar_grafico(datos, graph_label):
-    dot = graphviz.Digraph(format='png')
-    dot.attr(rankdir='TB', size='12,8', dpi='300')  # Ajusta el tamaño y la resolución
+def generar_grafico(continentes, nombre_grafica):
+    # Crear el grafo
+    grafo = Digraph(comment=nombre_grafica)
+    
+    # Nodo raíz (título principal)
+    grafo.node('grafico', nombre_grafica, shape='box', style='bold', fillcolor='lightblue', fontsize="16")
 
-    # Variables para almacenar el estado actual de los nodos
-    nodo_actual = None
-    nodo_padre = None
-    nombre_grafico = "Grafica"  # Valor por defecto
-    es_continente = False
-    primer_continente = True  # Controla si es el primer continente procesado
-    saturacion_pendiente = None  # Almacena la saturación pendiente
+    # Agregar nodos y aristas para continentes, países y saturaciones
+    for continente in continentes:
+        # Nodo para el continente
+        grafo.node(continente.nombre, shape='ellipse', style='filled', fillcolor='lightgreen')
+        grafo.edge('grafico', continente.nombre)
+        
+        # Para cada país en el continente
+        for pais in continente.paises:
+            # Nodo para el país
+            grafo.node(pais.nombre, shape='ellipse', style='filled', fillcolor='lightyellow')
+            grafo.edge(continente.nombre, pais.nombre)
+            
+            # Nodo para la saturación del país
+            grafo.node(f"{pais.nombre}_saturacion", f"Saturación: {pais.saturacion}%", shape='box', style='filled', fillcolor=calcular_color(pais.saturacion))
+            grafo.edge(pais.nombre, f"{pais.nombre}_saturacion")
+    
+    # Guardar el archivo .dot y la imagen PNG
+    grafo.save('grafo.dot')
+    grafo.render('grafo', format='png')
+    
 
-    for fila in datos:
-        lexema = fila[0]
-        tipo = fila[1]
-
-        if tipo == "PALABRA_RESERVADA":
-            if lexema == "Grafica":
-                nombre_grafico = "Grafica"  # Valor por defecto, se actualizará si hay un nombre
-            elif lexema == "Continente":
-                es_continente = True
-                if not primer_continente and nodo_padre:
-                    dot.edge(nombre_grafico, nodo_padre)  # Conecta el continente al título del grafo
-                nodo_padre = None
-                nodo_actual = None
-                primer_continente = False
-            elif lexema == "Pais":
-                es_continente = False
-                nodo_actual = None
-            elif lexema == "Saturacion":
-                saturacion_en_proceso = True
-            elif lexema == "Nombre":
-                nombre_en_proceso = True
-                continue
-
-
-        elif tipo == "CADENA":
-            if nombre_en_proceso:
-                if es_continente:
-                    nodo_padre = lexema.strip('"')
-                    dot.node(nodo_padre, label=nodo_padre)
-                    if nodo_padre:
-                        dot.edge(nombre_grafico, nodo_padre)  # Conecta el continente al título del grafo
-                else:
-                    nodo_actual = lexema.strip('"')
-                    dot.node(nodo_actual, label=nodo_actual)
-                    if nodo_padre:
-                        dot.edge(nodo_padre, nodo_actual)
-
-                # Si había saturación pendiente, ahora la procesamos
-                if saturacion_pendiente is not None:
-                    porcentaje = saturacion_pendiente
-                    color = calcular_color(porcentaje)
-                    dot.node(f"{nodo_actual}_saturacion", label=f"{porcentaje}%", style="filled", fillcolor=color)
-                    dot.edge(nodo_actual, f"{nodo_actual}_saturacion")
-                    saturacion_pendiente = None
-                
-                nombre_en_proceso = False
-
-            elif saturacion_en_proceso:
-                saturacion_pendiente = int(lexema.strip('"').strip('%'))  # Almacena el porcentaje de saturación pendiente
-                saturacion_en_proceso = False
-
-        elif tipo == "PORCENTAJE":
-            # Solo procesamos porcentajes si estamos en la fase de saturación
-            if saturacion_en_proceso:
-                if nodo_actual:
-                    porcentaje = int(lexema.strip('%'))  # Asegúrate de eliminar el símbolo de porcentaje
-                    color = calcular_color(porcentaje)
-                    dot.node(f"{nodo_actual}_saturacion", label=f"{porcentaje}%", style="filled", fillcolor=color)
-                    dot.edge(nodo_actual, f"{nodo_actual}_saturacion")
-                saturacion_en_proceso = False
-
-    # Conectar el último continente al título del grafo si es necesario
-    if nodo_padre and nombre_grafico != "Grafica":
-        dot.edge(nombre_grafico, nodo_padre)
-
-    ruta_grafico = nombre_grafico
-    dot.render(filename=ruta_grafico, format='png', cleanup=True)
-    mostrar_imagen(f"{ruta_grafico}.png", graph_label)
 
 
 def mostrar_imagen(ruta_grafico, graph_label):
     if os.path.exists(ruta_grafico):
         img = Image.open(ruta_grafico)
-        # Asegúrate de que el tamaño sea adecuado para la visualización sin pérdida de calidad
         img = img.resize((1200, 800), Image.Resampling.LANCZOS)
         img_tk = ImageTk.PhotoImage(img)
         graph_label.config(image=img_tk)
@@ -203,6 +209,7 @@ def mostrar_imagen(ruta_grafico, graph_label):
         graph_label.pack(fill="both", expand=True)  # Muestra la imagen si estaba oculta
     else:
         messagebox.showerror("Error", "No se encontró el archivo de gráfico.")
+
 
 
 def calcular_color(porcentaje):

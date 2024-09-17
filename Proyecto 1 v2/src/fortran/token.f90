@@ -1,8 +1,8 @@
 module TokenModule
     implicit none
     type :: Token
-        character(len=30) :: descripcion
-        character(len=30) :: tipo
+        character(len=100) :: descripcion
+        character(len=100) :: tipo
         integer :: linea
         integer :: columna
     end type Token

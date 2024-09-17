@@ -63,7 +63,7 @@ def construir_estructura_datos(datos):
     continente_actual = None
     pais_actual = None
     estado = None
-
+    estadoNombre = None
     for fila in datos:
         lexema = fila[0]
         tipo = fila[1]
@@ -82,6 +82,9 @@ def construir_estructura_datos(datos):
                 pais_actual = Pais(nombre="", poblacion=0, saturacion="", bandera="")
                 if continente_actual:
                     continente_actual.agregar_pais(pais_actual)
+                estado = 'PAIS'
+                estadoNombre = "PAIS"
+            elif lexema.lower() == "nombre" and estadoNombre=="PAIS":
                 estado = 'NOMBRE_PAIS'
             elif lexema.lower() == "saturacion":
                 estado = 'SATURACION'
@@ -96,10 +99,11 @@ def construir_estructura_datos(datos):
                 continente_actual.nombre = lexema.strip('"')
                 print(f"Nombre del continente actualizado: {continente_actual.nombre}")
                 estado = None
-            elif estado == 'NOMBRE_PAIS':
+            elif estado == 'NOMBRE_PAIS' or estadoNombre == 'NOMBRE_PAIS':
                 pais_actual.nombre = lexema.strip('"')
                 print(f"Nombre del país actualizado: {pais_actual.nombre}")
                 estado = None
+                estadoNombre = None
             elif estado == 'BANDERA' and pais_actual:
                 pais_actual.bandera = lexema.strip('"')
                 print(f"Bandera del país actualizada: {pais_actual.bandera}")

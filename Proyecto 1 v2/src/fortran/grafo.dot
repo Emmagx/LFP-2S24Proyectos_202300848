@@ -1,0 +1,28 @@
+// "ModeloContinentalBeta"
+digraph {
+	grafico [label="\"ModeloContinentalBeta\"" fillcolor=lightblue fontsize=16 shape=box style=bold]
+	Asia [fillcolor=lightgreen shape=ellipse style=filled]
+	grafico -> Asia
+	Japon [fillcolor=lightyellow shape=ellipse style=filled]
+	Asia -> Japon
+	Japon_saturacion [label="Saturación: 60%" fillcolor=yellow shape=box style=filled]
+	Japon -> Japon_saturacion
+	America [fillcolor=lightgreen shape=ellipse style=filled]
+	grafico -> America
+	Canada [fillcolor=lightyellow shape=ellipse style=filled]
+	America -> Canada
+	Canada_saturacion [label="Saturación: 44%" fillcolor=green shape=box style=filled]
+	Canada -> Canada_saturacion
+	Europa [fillcolor=lightgreen shape=ellipse style=filled]
+	grafico -> Europa
+	Alemania [fillcolor=lightyellow shape=ellipse style=filled]
+	Europa -> Alemania
+	Alemania_saturacion [label="Saturación: 74%" fillcolor=orange shape=box style=filled]
+	Alemania -> Alemania_saturacion
+	Oceania [fillcolor=lightgreen shape=ellipse style=filled]
+	grafico -> Oceania
+	IslasMarshall [fillcolor=lightyellow shape=ellipse style=filled]
+	Oceania -> IslasMarshall
+	IslasMarshall_saturacion [label="Saturación: 8%" fillcolor=white shape=box style=filled]
+	IslasMarshall -> IslasMarshall_saturacion
+}

@@ -7,7 +7,7 @@ from PIL import Image, ImageTk
 from pais import Pais
 from continente import Continente
 from graphviz import Digraph
-
+listaPaises = []
 def extraer_datos_tabla(html_content):
     filas = re.findall(r'<tr>(.*?)</tr>', html_content, re.DOTALL)
     datos = []
@@ -23,7 +23,7 @@ def analizar(text_input, graph_label, tree):
 
     if not texto_entrada:
         messagebox.showwarning("Advertencia", "El cuadro de entrada está vacío. Por favor, ingrese texto para analizar.")
-        return
+        return []
 
     ruta_entrada = "../fortran/entradaEjemplo.org"
     ruta_reporte_errores = "reporte_errores.html"
@@ -41,23 +41,32 @@ def analizar(text_input, graph_label, tree):
 
         if os.path.exists(ruta_reporte_errores) and os.path.getsize(ruta_reporte_errores) > 0:
             mostrar_errores(ruta_reporte_errores, tree)
+            return []
         else:
             if os.path.exists(ruta_reporte_tokens):
                 datos = extraer_datos_tabla(abrir_archivo_html(ruta_reporte_tokens))
                 continentes, tituloGrafica = construir_estructura_datos(datos)
                 generar_grafico(continentes, tituloGrafica)
                 mostrar_imagen(ruta_grafico, graph_label)
+                return continentes  # Retornar continentes aquí
             else:
                 messagebox.showerror("Error", "No se encontró el archivo de tokens.")
+                return []
 
     except subprocess.CalledProcessError as e:
         messagebox.showerror("Error", f"Hubo un error al ejecutar el analizador léxico: {e}")
+        return []
     except FileNotFoundError:
         messagebox.showerror("Error", "No se encontró el archivo de salida generado por el analizador léxico.")
+        return []
     except Exception as e:
         messagebox.showerror("Error", f"Se produjo un error inesperado: {e}")
+        return []
 
+######################Prueba paises###############################
 def construir_estructura_datos(datos):
+    global listaPaises
+    listaPaises = []  # Reiniciar la lista para evitar duplicados
     continentes = []
     continente_actual = None
     pais_actual = None
@@ -80,6 +89,7 @@ def construir_estructura_datos(datos):
                 pais_actual = Pais(nombre="", poblacion=0, saturacion="", bandera="")
                 if continente_actual:
                     continente_actual.agregar_pais(pais_actual)
+                listaPaises.append(pais_actual)  # Agregar el país a la lista global
                 estado = 'PAIS'
                 estadoNombre = "PAIS"
             elif lexema.lower() == "nombre" and estadoNombre == "PAIS":
@@ -118,6 +128,73 @@ def construir_estructura_datos(datos):
                 estado = None
 
     return continentes, tituloGrafica
+
+
+
+
+# def construir_estructura_datos(datos):
+#     global listaPaises
+#     continentes = []
+#     continente_actual = None
+#     pais_actual = None
+#     estado = None
+#     estadoNombre = None
+#     tituloGrafica = "No titulo"
+
+#     for fila in datos:
+#         lexema = fila[0]
+#         tipo = fila[1]
+
+#         if tipo == "PALABRA_RESERVADA":
+#             if lexema.lower() == "grafica":
+#                 estado = "GRAFICA"
+#             elif lexema.lower() == "continente":
+#                 continente_actual = Continente(nombre="")
+#                 continentes.append(continente_actual)
+#                 estado = 'NOMBRE_CONTINENTE'
+#             elif lexema.lower() == "pais":
+#                 pais_actual = Pais(nombre="", poblacion=0, saturacion="", bandera="")
+#                 if continente_actual:
+#                     continente_actual.agregar_pais(pais_actual)
+#                 estado = 'PAIS'
+#                 estadoNombre = "PAIS"
+#             elif lexema.lower() == "nombre" and estadoNombre == "PAIS":
+#                 estado = 'NOMBRE_PAIS'
+#             elif lexema.lower() == "saturacion":
+#                 estado = 'SATURACION'
+#             elif lexema.lower() == "poblacion":
+#                 estado = 'POBLACION'
+#             elif lexema.lower() == "bandera":
+#                 estado = 'BANDERA'
+#             continue
+
+#         elif tipo == "CADENA":
+#             if estado == 'NOMBRE_CONTINENTE':
+#                 continente_actual.nombre = lexema.strip('"')
+#                 estado = None
+#             elif estado == "GRAFICA":
+#                 tituloGrafica = lexema
+#                 estado = None
+#             elif estado == 'NOMBRE_PAIS' or estadoNombre == 'NOMBRE_PAIS':
+#                 pais_actual.nombre = lexema.strip('"')
+#                 estado = None
+#                 estadoNombre = None
+#             elif estado == 'BANDERA' and pais_actual:
+#                 pais_actual.bandera = 'images/' + pais_actual.nombre + '.png'
+#                 estado = None
+        
+#         elif tipo == "NUMERO_ENTERO":
+#             if estado == 'POBLACION' and pais_actual:
+#                 pais_actual.poblacion = int(lexema.strip('"'))
+#                 estado = None
+
+#         elif tipo == "PORCENTAJE":
+#             if estado == 'SATURACION' and pais_actual:
+#                 pais_actual.saturacion = int(lexema.strip('"'))
+#                 estado = None
+        
+
+#     return continentes, tituloGrafica
 
 def eliminar_archivos(*rutas):
     for ruta in rutas:
@@ -221,3 +298,7 @@ def guardar(text_input):
 
 def mostrar_acerca_de():
     messagebox.showinfo("Acerca de", "Proyecto de Lenguajes Formales y de Programación.\nUniversidad de San Carlos de Guatemala.\nEstudiante: Brayan Emanuel Garcia\nCarnet: 202300848")
+
+def getListaPaises():
+    print (listaPaises)
+    return listaPaises

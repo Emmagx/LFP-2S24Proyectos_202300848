@@ -1,5 +1,3 @@
-# pais.py
-
 class Pais:
     def __init__(self, nombre, poblacion, saturacion, bandera):
         self.nombre = nombre

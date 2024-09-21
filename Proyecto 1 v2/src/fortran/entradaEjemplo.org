@@ -1,60 +1,39 @@
 Grafica:{
-	Nombre: "5rchiv0 d3 3ntr4d4 #1 ";
-	Continente:{@
-		Nombre: "africa";
-			Pais:{
-				 Nombre: "Argelia"; 
-				 Poblacion: 38700000; 
-				 Saturacion: 32%; 
-				 Bandera: ".\Bandera\dz.png";
-			}$
-			Pais:{
-				 Nombre: "Zimbabue"; 
-				 Poblacion: 12973808; 
-				 Saturacion: 7%; 
-				 Bandera: ".\Bandera\zw.png";
-			}
-			Pais:{
-				 Nombre: "Tunez"; 
-				 Poblacion: 10886500; 
-				 Saturacion: 50%; 
-				 Bandera: ".\Bandera\tn.png";
-			}
-			Pais:{
-				 Nombre: "Egipto"; 
-			||	 Poblacion: 86127000; 
-				 Saturacion: 21%; 
-				 Bandera: ".\Bandera\eg.png";
-			}´´
-	}
-	Continente:{/
-		Nombre: "america del norte";
-			Pais:{
-				 Nombre: "Jamaica"; 
-				 Poblacion: 2711476; 
-				 Saturacion: 70%; 
-				 Bandera: ".\Bandera\jm.png";
-			}
-			Pais:{
-				 Nombre: "Belice"; 
-				 Poblacion: 349728; 
-				 Saturacion: 13%; 
-				 Bandera: ".\Bandera\bz.png";
-			}°
-	}#
+	Nombre:"Modelo Continental Beta";
 	Continente:{
-		Nombre: "America Del Sur";
-			Pais:{
-				 Nombre: "Brasil"; 
-				 Poblacion: 201032714; 
-				 Saturacion: 19%; 
-				 Bandera: ".\Bandera\br.png";
-			}
-			Pais:{
-				 Nombre: "Paraguay"; 
-				 Poblacion: 6783374; 
-				 Saturacion: 83%; 
-				 Bandera: ".\Bandera\py.png";
-			}¿
+	Nombre: "Asia";
+		Pais:{
+			Nombre:"Japon";
+			Poblacion: 2352342;
+			Saturacion:60%;
+			Bandera: ".\ImagenesBanderas\bandera_Japon.jpg";
+		}
 	}
+	Continente:{
+	Nombre: "America";
+		Pais:{
+			Nombre:"Canada";
+			Poblacion: 23423423;
+			Saturacion:44%;
+			Bandera: ".\ImagenesBanderas\bandera_Canada.png";
+		}
+	}
+	Continente:{
+	Nombre: "Europa";
+		Pais:{
+			Nombre:"Alemania";
+			Poblacion: 2352342;
+			Saturacion:74%;
+			Bandera: ".\ImagenesBanderas\bandera_Alemania.jpg";
+	}
+}
+  Continente:{
+  Nombre: "Oceania";
+     Pais:{
+          Nombre:"Islas Marshall";
+          Poblacion: 2352342;
+          Saturacion:8%;
+          Bandera: ".\ImagenesBanderas\bandera_IslasMarshall.png";
+     }
+  }
 }

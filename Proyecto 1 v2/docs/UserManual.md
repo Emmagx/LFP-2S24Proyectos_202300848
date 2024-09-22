@@ -44,7 +44,7 @@ El **Analizador Léxico** incluye las siguientes características:
 - La interfaz gráfica se abrirá automáticamente.
 
 ### 2. Uso del programa:
-![Interfaz web](/images/UserManual.png)
+![Interfaz web](Proyecto1/images/UserManual.png)
 - **Abrir**: Selecciona el archivo de texto o código fuente que deseas analizar.
 - **Análisar**: Haz clic en el botón "Análisis" para iniciar el analisis.
 - **Guardar**: Guarda el archivo que este en el editor de texto.
@@ -52,12 +52,12 @@ El **Analizador Léxico** incluye las siguientes características:
 
 ### 3. Analisis de datos
 - El programa analiza el archivo seleccionado y muestra los tokens encontrados en un grafo si todos los token son aceptados.
-![Programa sin errores](/images/programaBien.png)
+![Programa sin errores](Proyecto1/images/programaBien.png)
 - Si hay un token que no es aceptado, el programa muestra una tabla de errores que muestra el error y tambien la ubicacion del error.
-![Interfaz web](/images/programaMal.png)
+![Interfaz web](Proyecto1/images/programaMal.png)
 
 ### 4. Muestra de datos
 - Aparece un nuevo frame con una parte de seleccion con los paises detectados, si seleccionamos un pais nos mostrara su bandera y su poblacion.
-![Interfaz web](/images/Banderas.png)
+![Interfaz web](Proyecto1/images/Banderas.png)
 
 

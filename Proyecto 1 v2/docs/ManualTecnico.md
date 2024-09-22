@@ -34,7 +34,7 @@ El sistema está dividido en dos componentes principales:
 
 El flujo de datos comienza con la interfaz gráfica, donde el usuario ingresa el texto a analizar. Este texto es enviado al motor léxico escrito en Fortran, que devuelve los tokens en forma de grafo si es correcta la estructura o en una tabla hecha con html con los token si hay errores.
 
-![Diagrama de arquitectura](images/arquitectura.png)
+![Diagrama de arquitectura](Proyecto1/images/arquitectura.png)
 
 ## Descripción de Componentes
 

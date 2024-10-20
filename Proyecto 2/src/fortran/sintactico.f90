@@ -15,15 +15,14 @@ contains
         tokens = listaTokens
         pos = 1
 
-        print *, "Iniciando el analisis sintactico con ", size(tokens), " tokens."
+        print *, "Iniciando el análisis sintáctico con ", size(tokens), " tokens."
 
-        ! Iniciar la producción S
         call parse_S()
 
         if (pos <= size(tokens)) then
-            print *, "Error sintactico: Tokens inesperados al final. Posicion actual: ", pos
+            print *, "Error sintáctico: Tokens inesperados al final. Posición actual: ", pos
         else
-            print *, "Analisis sintactico completado con errores manejados (si los hubo)."
+            print *, "Análisis sintáctico completado."
         end if
     end subroutine parsear
 
@@ -54,19 +53,19 @@ contains
     recursive subroutine parse_ControlList()
         print *, "Iniciando parse_ControlList en la posicion ", pos
         if (esControlValido()) then
-            print *, "Se encontro un control valido en la posicion ", pos
+            print *, "Se encontró un control válido en la posición ", pos
             call parse_Control()
             call parse_ControlList()
         else
-            print *, "No hay mas controles validos, produccion vacia en la posicion ", pos
+            print *, "No hay más controles válidos, producción vacía en la posición ", pos
         end if
     end subroutine parse_ControlList
 
     ! Producción Control ::= ControlType IDENTIFICADOR ';' | COMENTARIO_LINEA
     subroutine parse_Control()
-        print *, "Iniciando parse_Control en la posicion ", pos
+        print *, "Iniciando parse_Control en la posición ", pos
         if (tokens(pos)%tipo == COMENTARIO_LINEA) then
-            print *, "Comentario de línea encontrado en la posicion ", pos
+            print *, "Comentario de línea encontrado en la posición ", pos
             if (consumirToken(COMENTARIO_LINEA)) return
         else
             print *, "Llamando a parse_ControlType"
@@ -76,9 +75,17 @@ contains
         end if
     end subroutine parse_Control
 
+    subroutine parse_PropiedadesControl()
+        if (tokens(pos)%tipo == PROPIEDAD_CONTROL) then
+            print *, "Propiedad de control encontrada: ", tokens(pos)%valor
+            if (.not. consumirToken(PROPIEDAD_CONTROL)) call modoPanico(';')
+            ! Manejo de propiedades como setAncho(), setTexto(), setColorFondo(), etc.
+        end if
+    end subroutine parse_PropiedadesControl
+
     ! Producción ControlType ::= RESERVADA_ETIQUETA | RESERVADA_BOTON | ...
     subroutine parse_ControlType()
-        print *, "Iniciando parse_ControlType en la posicion ", pos
+        print *, "Iniciando parse_ControlType en la posición ", pos
         select case (tokens(pos)%tipo)
             case (RESERVADA_ETIQUETA)
                 print *, "Reservada etiqueta encontrada"
@@ -105,7 +112,7 @@ contains
                 print *, "Reservada contenedor encontrada"
                 if (.not. consumirToken(RESERVADA_CONTENEDOR)) call modoPanico(';')
             case default
-                print *, "Error sintactico: Tipo de control no valido en la posicion ", pos
+                print *, "Error sintáctico: Tipo de control no válido en la posición ", pos
                 call modoPanico(';')
         end select
     end subroutine parse_ControlType
@@ -115,17 +122,17 @@ contains
         integer, intent(in) :: tipoEsperado
         if (pos > size(tokens)) then
             consumirToken = .false.
-            print *, "Error sintactico: Fin de tokens inesperado en la posicion ", pos
+            print *, "Error sintáctico: Fin de tokens inesperado en la posición ", pos
             return
         end if
         if (tokens(pos)%tipo == tipoEsperado) then
-            print *, "Token ", trim(getTipoTokenEnString(tipoEsperado)), " consumido correctamente en la posicion ", pos
+            print *, "Token ", trim(getTipoTokenEnString(tipoEsperado)), " consumido correctamente en la posición ", pos
             pos = pos + 1
             consumirToken = .true.
         else
             consumirToken = .false.
-            print *, "Error sintactico: Se esperaba el token ", trim(getTipoTokenEnString(tipoEsperado)), &
-                     ", pero se encontro ", trim(getTipoTokenEnString(tokens(pos)%tipo)), " en la posicion ", pos
+            print *, "Error sintáctico: Se esperaba el token ", trim(getTipoTokenEnString(tipoEsperado)), &
+                     ", pero se encontró ", trim(getTipoTokenEnString(tokens(pos)%tipo)), " en la posición ", pos
         end if
     end function consumirToken
 
@@ -141,13 +148,13 @@ contains
                            (tokens(pos)%tipo == RESERVADA_CLAVE) .or. &
                            (tokens(pos)%tipo == RESERVADA_CONTENEDOR) .or. &
                            (tokens(pos)%tipo == COMENTARIO_LINEA))
-        print *, "Es control valido: ", esControlValido, " en la posicion ", pos
+        print *, "Es control válido: ", esControlValido, " en la posición ", pos
     end function esControlValido
 
     ! Procedimiento Modo Pánico: busca el token de sincronización (';')
     subroutine modoPanico(tokenSincronizacion)
         character(len=*), intent(in) :: tokenSincronizacion
-        print *, "Recuperacion de error en Modo Panico. Buscando '", tokenSincronizacion, "' en la posicion ", pos
+        print *, "Recuperación de error en Modo Pánico. Buscando '", tokenSincronizacion, "' en la posición ", pos
 
         ! Saltar tokens hasta encontrar el token de sincronización (en este caso ';')
         do while (pos <= size(tokens) .and. trim(getTipoTokenEnString(tokens(pos)%tipo)) /= tokenSincronizacion)
@@ -156,10 +163,10 @@ contains
 
         ! Una vez que se encuentra ';', avanzar para continuar el análisis
         if (pos <= size(tokens)) then
-            print *, "Recuperacion completada, '", tokenSincronizacion, "' encontrado en la posicion ", pos
+            print *, "Recuperación completada, '", tokenSincronizacion, "' encontrado en la posición ", pos
             pos = pos + 1
         else
-            print *, "Fin de tokens alcanzado durante la recuperacion en Modo Panico."
+            print *, "Fin de tokens alcanzado durante la recuperación en Modo Pánico."
         end if
     end subroutine modoPanico
 
@@ -168,7 +175,6 @@ contains
         character(len=20) :: res
 
         res = ""
-        
         select case (p)
         case (RESERVADA_CONTROLES)
             res = "RESERVADA_CONTROLES"

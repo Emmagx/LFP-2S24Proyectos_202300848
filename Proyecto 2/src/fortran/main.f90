@@ -1,7 +1,7 @@
-program analizador
+program analizador 
     use TokenModule
     use mod_analizador_lexico
-    use mod_analizador_sintactico
+    !use mod_analizador_sintactico
     use mod_utilidades
     implicit none
 
@@ -36,10 +36,13 @@ program analizador
                     call escanear(cadenaEntrada, listaTokens)
                     print *, "Analisis lexico completado. Lista de tokens generada."
 
-                    ! Creamos un analizador sintáctico y le pedimos que analice la lista de tokens
-                    ! que nos dio el analizador léxico como resultado
+                    ! Imprimir la lista de tokens
+                    print *, "Lista de Tokens generada:"
+                    call imprimirListaTokens(listaTokens)
+
+                    ! Iniciar el análisis sintáctico (comentado hasta que actives el analizador sintáctico)
                     print *, "Iniciando analisis sintactico"
-                    call parsear(listaTokens)
+                    !call parsear(listaTokens)
                     print *, "Analisis sintactico completado"
                 end if
             case (2)
@@ -61,17 +64,3 @@ subroutine show_menu()
     print *, "Seleccione una opcion:"
 end subroutine show_menu
 
-! NOTAS:
-! Text = "(1+2+(5*(((7)))+2)+"
-! En este ejemplo se muestra una expresión incompleta, léxicamente es correcta
-! pero sintacticamente no, su estructura es incorrecta porque le hace falta un 
-! numero y un paréntesis derecho para estar completa. 
-
-! Cabe mencionar que en muchos casos este analizador sintáctico no funcionará como
-! se espera porque no cuenta con un sistema de recuperación de errores, es trabajo 
-! del estudiante desarrollar este sistema con alguna de las estrategias de recuperación 
-! de errores sintácticos. 
-
-! El fundamento teórico que sirvio de soporte para el desarrollo de este ejemplo es el 
-! descrito en la sección 4.4.1 del libro del dragón, segunda edición, que se titula
-! Análisis sintáctico de descenso recursivo.

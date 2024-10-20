@@ -1,122 +1,110 @@
-// Definición de mis controles
-Contenedor contlogin; 
-Contenedor contFondo; 
-Boton cmdIngresar; 
-Clave pswClave; 
-Etiqueta passw; 
-Etiqueta Nombre; 
+<!--Controles
+    // Este bloque tambien puede recibir comentarios
+    Contenedor contlogin;
+    Contenedor contFondo;
+    Boton cmdIngresar;
+    Clave pswClave;
+    Etiqueta passw;
+    Etiqueta Nombre;
+    Texto Texto0;
+    Contenedor contlogo2;
+    Contenedor ContLogo1;
+    Contenedor ContBody;
+Controles -->
 
-Texto Texto0; 
-Contenedor contlogo2; 
-Contenedor ContLogo1; 
-Contenedor ContBody;
-Check miCheck;
-AreaTexto textArea0;
+<!--Propiedades
+    /*
+    Definicion de propiedades
+    */
 
-// asignacion de propiedades a mis controles
-contlogin.setAncho(190); 
-contlogin.setAlto(150); 
-contlogin.setColorFondo(47,79,79);
+    //#$inicio de contlogin
+    contlogin.setAncho(190);
+    contlogin.setAlto(150);
+    contlogin.setColorFondo(47,79,79);
+    //#$fin de contlogin
 
-contFondo.setAncho(800); 
-contFondo.setAlto(100); 
-contFondo.setColorFondo(64,64,64);
-/*
-<div id="contFondo"> 
-</div>
-*/
+    //#$inicio de contFondo
+    contFondo.setAncho(800);
+    contFondo.setAlto(100);
+    contFondo.setColorFondo(64,64,64);
+    //#$fin de contFondo
 
-cmdIngresar.setTexto("Ingresar"); 
-/*
-<button id="cmdIngresar" style="text-align: center"
-    Ingresar
-</button>
-*/
+    //#$inicio de cmdIngresar
+    cmdIngresar.setTexto("Ingresar");
+    //#$fin de cmdIngresar
 
-pswClave.setTexto("");
-/*
-<input type="password" id="pswClave" 
-value="" style="text-align:center"
-/>
-*/
+    //#$inicio de pswClave
+    pswClave.setTexto("");
+    //#$fin de pswClave
 
-passw.setAncho(53); 
-passw.setAlto(13); 
-passw.setColorLetra(128,128,128); 
-passw.setTexto("Password");
-// traducción:  <label id="passw"> Password </label>
+    //#$inicio de etiqueta passw
+    passw.setAncho(53);
+    passw.setAlto(13 );
+    passw.setColorLetra(128,128,128);
+    passw.setTexto("Password");
+    //#$fin de passw
 
-Nombre.setAncho(44); 
-Nombre.setAlto(13); 
-Nombre.setColorLetra(128,128,128); 
-Nombre.setTexto("Nombre");
+    //#$inicio de Nombre
+    Nombre.setAncho(44); 
+    Nombre.setAlto(13);
+    Nombre.setColorLetra(128,128,128); 
+    Nombre.setTexto("Nombre");
+    //#$fin de Nombre
 
-JTextField0.setTexto("");
+    //#$inicio de JTextField0 
+    JTextField0.setTexto("");
+    //#$fin de JTextField0
 
-contlogo2.setAncho(150);
-contlogo2.setAlto(50); 
-contlogo2.setColorFondo(0,128,128);
+    //#$inicio de contlogo2 
+    contlogo2.setAncho(150); 
+    contlogo2.setAlto( 50);
+    contlogo2.setColorFondo(0,128,128);
+    //#$fin de contlogo2
 
-ContLogo1.setAncho(50); 
-ContLogo1.setAlto(50); 
-ContLogo1.setColorFondo(64,64,64);
+    //#$inicio de ContLogo1
+    ContLogo1.setAncho(50); 
+    ContLogo1.setAlto( 50);
+    ContLogo1.setColorFondo(64,64,64);
+    //#$fin de ContLogo1
 
-ContBody.setAncho(800);
-ContBody.setAlto(300); 
-ContBody.setColorFondo(64,224,208);
+    //#$inicio de ContBody
+    ContBody.setAncho(800); 
+    ContBody.setAlto(300);
+    ContBody.setColorFondo(64,224,208);
+    //#$fin de ContBody
+Propiedades -->
 
-miCheck.setMarcada(true);
-// pendiente setGrupo
-// <input type="checkbox" id="miCheck" checked="true" />
-// <input type="radio" name="Group" id="ID"Marcado />
+<!--Colocacion
+    /*
+    Posicionamiento de los controles
+    */
+    contFondo.setPosicion(25,330);
+    this.add(contFondo);
 
-texto0.setAncho(44);
-texto0.setAlto(13);
-texto0.setTexto("Texto0");
-/*
-<input type="text" id="Texto0" value="Texto0" 
-style="text-align: center" />
-*/
+    contlogin.setPosicion(586,110);
+    ContBody.add(contlogin);
 
-textArea0.setAncho(100);
-textArea0.setAlto(100);
-textArea0.setTexto("");
-/*
-<textarea id="ID" column=5>
-</textarea>
-*/
+    passw.setPosicion(11,54); 
+    contlogin.add(passw);
 
-// posicionamiento de mis controles
-contlogin.add(cmdIngresar);
-/*
-    <div>
-        <button>cmdIngresar</button> 
-    </div>
-*/
-contFondo.setPosicion(25,330);
-this.add(contFondo);
+    cmdIngresar.setPosicion(40,100);
+    contlogin.add(cmdIngresar);
 
-contlogin.setPosicion(586,110);
-ContBody.add(contlogin);
+    pswClave.setPosicion(67,48);
+    contlogin.add(pswClave);
 
-passw.setPosicion(11,54);
-contlogin.add(passw);
+    Nombre.setPosicion(8,21);
+    contlogin.add(Nombre);
 
-cmdIngresar.setPosicion(40,100);
-pswClave.setPosicion(67,48); 
-contlogin.add(pswClave);
+    JTextField0.setPosicion(65,20);
+    contlogin.add(JTextField0);
 
-Nombre.setPosicion(8,21); 
-contlogin.add(Nombre);
+    contlogo2.setPosicion(88,25);
+    ContBody.add(contlogo2);
 
-JTextField0.setPosicion(65,20); 
-contlogin.add(JTextField0);
+    ContLogo1.setPosicion(36,25);
+    ContBody.add(ContLogo1);
 
-contlogo2.setPosicion(88,25); 
-ContBody.add(contlogo2);
-
-ContLogo1.setPosicion(36,25); 
-ContBody.add(ContLogo1);
-
-ContBody.setPosicion(23,21); 
-this.add(ContBody);
+    ContBody.setPosicion(23,21);
+    this.add(ContBody);
+Colocacion -->

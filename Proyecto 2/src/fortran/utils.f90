@@ -7,7 +7,7 @@ contains
     ! Subrutina para leer un archivo y devolver su contenido
     subroutine leerArchivo(nombreArchivo, cadena, ios)
         character(len=*), intent(in) :: nombreArchivo
-        character(len=350), intent(out) :: cadena
+        character(len=*), intent(out) :: cadena
         integer, intent(out) :: ios
         integer :: iunit
         character(len=100) :: temp_line

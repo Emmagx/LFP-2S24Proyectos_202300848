@@ -6,9 +6,9 @@ module TokenModule
     public :: SIGNO_ADMIRACION_C, SIGNO_PUNTO_Y_COMA, SIGNO_GUION, COMENTARIO_LINEA
     public :: RESERVADA_AREATEXTO, RESERVADA_CLAVE, RESERVADA_CONTENEDOR
     public :: COMENTARIO_MULTILINEA, PROPIEDAD_CONTROL, SIGNO_PUNTO, SIGNO_PARENTESIS_APERTURA
-    public :: SIGNO_PARENTESIS_CERRADURA, VALOR_CADENA, VALOR_NUMERICO, imprimirListaTokens
+    public :: SIGNO_PARENTESIS_CERRADURA, VALOR_CADENA, VALOR_NUMERICO, imprimirListaTokens, COMA
     type :: token
-        character(len=5000) :: valor
+        character(len = 35) :: valor
         integer :: tipo
     end type token
 
@@ -35,6 +35,7 @@ module TokenModule
     integer, parameter :: SIGNO_PARENTESIS_CERRADURA = 21
     integer, parameter :: VALOR_CADENA = 22
     integer, parameter :: VALOR_NUMERICO = 23
+    integer, parameter :: COMA = 24
 
     contains
     ! Subrutina para imprimir la lista de tokens
@@ -47,7 +48,7 @@ module TokenModule
         print *, "==========================="
         
         do i = 1, size(listaTokens)
-            print *, "Token ", i, ": Tipo = ", trim(listaTokens(i)%valor), &
+            print *, "Token ", i, ": Tipo = ", listaTokens(i)%tipo, &
                     ", Valor = '", trim(listaTokens(i)%valor), "'"
         end do
 

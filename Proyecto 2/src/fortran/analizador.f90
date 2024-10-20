@@ -9,7 +9,7 @@ contains
 subroutine escanear(entrada, listaTokens)
     use TokenModule
     character(len=*), intent(inout) :: entrada
-    type(token), dimension(:), allocatable, intent(out) :: listaTokens
+    type(token), dimension(:), allocatable, intent(inout) :: listaTokens
     integer :: i, estado, length
     character(len=1) :: c
     character(:), allocatable :: auxLex
@@ -18,7 +18,6 @@ subroutine escanear(entrada, listaTokens)
     estado = 0
     auxLex = ""
     i = 0
-    allocate(listaTokens(0))
 
     ! Añadir un carácter de fin de cadena para facilitar el análisis
     entrada(length + 1: length + 1) = '#'
@@ -34,17 +33,14 @@ subroutine escanear(entrada, listaTokens)
             if (c >= 'a' .and. c <= 'z' .or. c >= 'A' .and. c <= 'Z') then
                 estado = 1
                 auxLex = trim(auxLex) // c
-            else if (c == '(') then
-                call addToken(SIGNO_PARENTESIS_APERTURA, c, listaTokens)
-            else if (c == ')') then
-                call addToken(SIGNO_PARENTESIS_CERRADURA, c, listaTokens)
             else if (c == '"') then
                 estado = 5
                 auxLex = ""
             else if (c >= '0' .and. c <= '9') then
                 estado = 8
                 auxLex = trim(auxLex) // c
-            else if (c == '!' .or. c == '<' .or. c == '>' .or. c == ';' .or. c == '-' .or. c == '.') then
+            else if (c == '!' .or. c == '<' .or. c == '>' .or. c == ';' .or. c == '-' .or. c == '.' .or. c == "(" &
+                .or. c ==")" .or. c == ',') then
                 estado = 2
                 auxLex = c
             else if (c == '/') then
@@ -88,6 +84,12 @@ subroutine escanear(entrada, listaTokens)
                 call addToken(SIGNO_GUION, auxLex, listaTokens)
             case ('.')
                 call addToken(SIGNO_PUNTO, auxLex, listaTokens)
+            case ('(')
+                call addToken(SIGNO_PARENTESIS_APERTURA, auxLex, listaTokens)
+            case (')')
+                call addToken(SIGNO_PARENTESIS_CERRADURA, auxLex, listaTokens)
+            case (',')
+                call addToken(COMA, auxLex, listaTokens)
             end select
             estado = 0
             i = i - 1
@@ -152,7 +154,6 @@ subroutine addToken(tipo, valor, listaTokens)
 
     nuevoToken%tipo = tipo
     nuevoToken%valor = valor
-
     tamanoActual = size(listaTokens)
 
     print *, "Anadiendo token: ", trim(getTipoTokenEnString(tipo)), " con valor: ", trim(valor)
@@ -214,15 +215,17 @@ function getTipoTokenEnString(p) result(res)
     case (SIGNO_PUNTO)
         res = "SIGNO_PUNTO"
     case (SIGNO_PARENTESIS_APERTURA)
-        res = "SIGNO_PARENTESIS_APERTURA"
+        res = "SIGNO_PARENTESIS_A"
     case (SIGNO_PARENTESIS_CERRADURA)
-        res = "SIGNO_PARENTESIS_CERRADURA"
+        res = "SIGNO_PARENTESIS_C"
     case (VALOR_CADENA)
         res = "VALOR_CADENA"
     case (VALOR_NUMERICO)
         res = "VALOR_NUMERICO"
     case (COMENTARIO_MULTILINEA)
-        res = "COMENTARIO_MULTILINEA"
+        res = "COMENTARIO_MULT"
+    case (COMA)
+        res = "COMA"
     case default
         res = "Desconocido"
     end select

@@ -54,9 +54,9 @@ program analizador
                 call imprimirListaTokens(listaTokens)
 
                 ! Iniciar el análisis sintáctico
-                print *, "Iniciando análisis sintáctico"
+                print *, "Iniciando analisis sintactico"
                 call parsear(listaTokens)
-                print *, "Análisis sintáctico completado"
+                print *, "Analisis sintactico completado"
                 
             case (2)
                 print *, "Opcion 2 seleccionada: Saliendo del programa..."

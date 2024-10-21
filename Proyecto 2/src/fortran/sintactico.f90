@@ -409,7 +409,7 @@ recursive subroutine parse_ColocacionList()
         call parse_Colocacion()
         call parse_ColocacionList()
     else
-        print *, "No hay más colocaciones, produccion vacia en la posicion ", pos
+        print *, "No hay mas colocaciones, produccion vacia en la posicion ", pos
     end if
 end subroutine parse_ColocacionList
 

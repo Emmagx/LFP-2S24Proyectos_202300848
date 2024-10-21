@@ -1,19 +1,22 @@
-program analizador 
+program analizador
     use TokenModule
+    use ErrorModule
     use mod_analizador_lexico
     use mod_analizador_sintactico
     use mod_utilidades
     implicit none
-
-    integer :: opcion
     integer :: ios
     type(token), dimension(:), allocatable :: listaTokens
+    type(error), dimension(:), allocatable :: errores
     character(len=1000) :: linea
     logical :: finArchivo, enComentario
     integer :: unidadArchivo
+    integer :: i
+
+    i = 0
 
     ! Abrir el archivo
-    unidadArchivo = 10 ! Usar una unidad de archivo que no esté en uso
+    unidadArchivo = 10  ! Usar una unidad de archivo que no esté en uso
     open(unit=unidadArchivo, file="EntradaEjemplo.LFP", status="old", action="read", iostat=ios)
     if (ios /= 0) then
         print *, "Error al abrir el archivo, ios = ", ios
@@ -22,60 +25,38 @@ program analizador
 
     ! Inicializar la lista de tokens y la bandera
     allocate(listaTokens(0))
+    allocate(errores(0))
     enComentario = .false.
+    finArchivo = .false.
 
-    ! Ciclo del menú
-    do
-        print *, "Mostrando menu principal"
-        call show_menu()
-
-        print *, "Esperando entrada del usuario para seleccionar opcion..."
-        read (*, *) opcion
-        print *, "Opcion ingresada: ", opcion
-
-        select case (opcion)
-            case (1)
-                print *, "Opcion 1 seleccionada: Analizar archivo"
-                
-                ! Leer el archivo línea por línea
-                finArchivo = .false.
-                do while (.not. finArchivo)
-                    read(unit=unidadArchivo, fmt='(A)', iostat=ios) linea
-                    if (ios /= 0) then
-                        finArchivo = .true.
-                    else
-                        print *, "Analizando línea: ", trim(linea)
-                        call escanear(linea, listaTokens, enComentario)
-                    end if
-                end do
-
-                ! Imprimir la lista de tokens
-                print *, "Análisis léxico completado. Lista de tokens generada:"
-                call imprimirListaTokens(listaTokens)
-
-                ! Iniciar el análisis sintáctico
-                print *, "Iniciando analisis sintactico"
-                call parsear(listaTokens)
-                print *, "Analisis sintactico completado"
-                
-            case (2)
-                print *, "Opcion 2 seleccionada: Saliendo del programa..."
-                exit
-            case default
-                print *, "Opcion no válida. Por favor, Intente de nuevo."
-        end select
+    do while (.not. finArchivo)
+        read(unit=unidadArchivo, fmt='(A)', iostat=ios) linea
+        if (ios /= 0) then
+            finArchivo = .true.
+        else
+            i = i + 1
+            print *, "Analizando linea: ", trim(linea)
+            call escanear(linea, listaTokens, enComentario, i, errores)
+        end if
     end do
+
+    ! Imprimir la lista de tokens
+    print *, "Analisis léxico completado. Lista de tokens generada:"
+    call imprimirListaTokens(listaTokens)
+
+    ! Iniciar el análisis sintáctico
+    print *, "Iniciando analisis sintactico"
+    call parsear(listaTokens, errores)
+    print *, "Analisis sintactico completado"
+    
+    ! Imprimir errores y generar reportes
+    call printErrors(errores)
+    if (size(errores) > 0) then
+        call generarHTMLErrores(errores)
+    end if
+    call generarHTMLTokens(listaTokens)
 
     ! Cerrar el archivo
     close(unidadArchivo)
-end program analizador
 
-! Subrutina para mostrar el menú
-subroutine show_menu()
-    print *, "==========================="
-    print *, "       Menu Principal       "
-    print *, "==========================="
-    print *, "1. Analizar"
-    print *, "2. Salir"
-    print *, "Seleccione una opcion:"
-end subroutine show_menu
+end program analizador

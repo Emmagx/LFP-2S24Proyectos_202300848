@@ -16,13 +16,11 @@ Controles -->
     /*
     Definicion de propiedades
     */
-
     //#$inicio de contlogin
     contlogin.setAncho(190);
     contlogin.setAlto(150);
     contlogin.setColorFondo(47,79,79);
     //#$fin de contlogin
-
     //#$inicio de contFondo
     contFondo.setAncho(800);
     contFondo.setAlto(100);
@@ -101,10 +99,8 @@ Propiedades -->
 
     contlogo2.setPosicion(88,25);
     ContBody.add(contlogo2);
-
     ContLogo1.setPosicion(36,25);
     ContBody.add(ContLogo1);
-
     ContBody.setPosicion(23,21);
     this.add(ContBody);
 Colocacion -->

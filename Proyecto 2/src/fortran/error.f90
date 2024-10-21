@@ -7,41 +7,38 @@ module ErrorModule
         character(len=20) :: descripcion
         character(len=20) :: tipo
         integer :: linea
-        integer :: columna
     end type Error
 
     contains 
 
-    subroutine initError(descripcion, tipo, linea, columna, e)
+    subroutine initError(descripcion, tipo, linea, e)
         implicit none
         character(len=*), intent(in) :: descripcion, tipo
-        integer, intent(in) :: linea, columna
+        integer, intent(in) :: linea
         type(Error), intent(inout) :: e
 
         ! limpiar el error
         e%descripcion = ""
         e%tipo = ""
         e%linea = 0
-        e%columna = 0
 
         ! asignar valores al error
         e%descripcion = trim(tipo)
         e%tipo = trim(descripcion)
         e%linea = linea
-        e%columna = columna
     end subroutine initError
 
-    subroutine addError(errors, descripcion, buffer_, linea, columna)
+    subroutine addError(errors, descripcion, buffer_, linea)
         implicit none
         type(Error), allocatable, intent(inout) :: errors(:)
         character(len=*), intent(in) :: descripcion, buffer_
-        integer, intent(in) :: linea, columna
+        integer, intent(in) :: linea
         type(Error) :: e
         integer :: n
     
         ! Inicializar el error
         if (.not. isSpecialChar(descripcion)) then
-            call initError(descripcion, buffer_, linea, columna, e)
+            call initError(descripcion, buffer_, linea, e)
             if (.not. allocated(errors)) then
                 allocate(errors(1))
                 errors(1) = e
@@ -76,5 +73,25 @@ module ErrorModule
         isSpecialChar = (c == ' ' .or. c == CHAR(9) .or. c == CHAR(10))
     end function isSpecialChar
 
+    subroutine printErrors(errors)
+        implicit none
+        type(Error), allocatable, intent(in) :: errors(:)
+        integer :: i
+
+        ! Si no hay errores, no hacemos nada
+        if (.not. allocated(errors)) then
+            print *, "No hay errores."
+            return
+        end if
+
+        ! Imprimir cada error
+        do i = 1, size(errors)
+            print *, "Error ", i, ":"
+            print *, "  Descripción: ", trim(errors(i)%descripcion)
+            print *, "  Tipo       : ", trim(errors(i)%tipo)
+            print *, "  Línea      : ", errors(i)%linea
+            print *, ""
+        end do
+    end subroutine printErrors
 
 end module ErrorModule

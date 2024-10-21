@@ -1,20 +1,23 @@
 module mod_analizador_lexico
     use TokenModule  ! Aseguramos que todos los tokens estén disponibles
+    use ErrorModule
     implicit none
     private
     public :: escanear
-
+    
 contains
 
-subroutine escanear(entrada, listaTokens, enComentario)
+subroutine escanear(entrada, listaTokens, enComentario, noLinea, errores)
     use TokenModule
     character(len=*), intent(inout) :: entrada
     type(token), dimension(:), allocatable, intent(inout) :: listaTokens
+    
     integer :: i, estado, length
     character(len=1) :: c
     character(:), allocatable :: auxLex
     logical, intent(inout) :: enComentario
-
+    integer, intent(inout) :: noLinea
+    type(Error), dimension(:), allocatable, intent(inout):: errores
     length = len_trim(entrada)
     estado = 0
     auxLex = ""
@@ -55,6 +58,8 @@ subroutine escanear(entrada, listaTokens, enComentario)
                 exit
             else
                 print *, "Error léxico con: ", trim(c)
+                call addError(errores, "Error léxico", trim(c), noLinea) ! Añadir Error
+
                 estado = 0
             end if
         case (1)
@@ -65,50 +70,50 @@ subroutine escanear(entrada, listaTokens, enComentario)
                 select case (trim(auxLex))
                 ! Propiedades del control
                 case ('setTexto')
-                    call addToken(setTexto, auxLex, listaTokens)
+                    call addToken(setTexto, auxLex, listaTokens, noLinea)
                 case ('setAncho')
-                    call addToken(setAncho, auxLex, listaTokens)
+                    call addToken(setAncho, auxLex, listaTokens, noLinea)
                 case ('setColorFondo')
-                    call addToken(setColorFondo, auxLex, listaTokens)
+                    call addToken(setColorFondo, auxLex, listaTokens, noLinea)
                 case ('setPosicion')
-                    call addToken(setPosicion, auxLex, listaTokens)
+                    call addToken(setPosicion, auxLex, listaTokens, noLinea)
                 case ('add')
-                    call addToken(add, auxLex, listaTokens)
+                    call addToken(add, auxLex, listaTokens, noLinea)
                 case ('setMarcada')
-                    call addToken(setMarcada, auxLex, listaTokens)
+                    call addToken(setMarcada, auxLex, listaTokens, noLinea)
                 case ('setColorLetra')
-                    call addToken(setColorLetra, auxLex, listaTokens)
+                    call addToken(setColorLetra, auxLex, listaTokens, noLinea)
                 case ("setAlto")
-                    call addToken(setAlto, auxLex, listaTokens)
+                    call addToken(setAlto, auxLex, listaTokens, noLinea)
                 
                 ! Identificadores de controles
                 case ('Contenedor')
-                    call addToken(RESERVADA_CONTENEDOR, auxLex, listaTokens)
+                    call addToken(RESERVADA_CONTENEDOR, auxLex, listaTokens, noLinea)
                 case ('Boton')
-                    call addToken(RESERVADA_BOTON, auxLex, listaTokens)
+                    call addToken(RESERVADA_BOTON, auxLex, listaTokens, noLinea)
                 case ('Clave')
-                    call addToken(RESERVADA_CLAVE, auxLex, listaTokens)
+                    call addToken(RESERVADA_CLAVE, auxLex, listaTokens, noLinea)
                 case ('Etiqueta')
-                    call addToken(RESERVADA_ETIQUETA, auxLex, listaTokens)
+                    call addToken(RESERVADA_ETIQUETA, auxLex, listaTokens, noLinea)
                 case ('Texto')
-                    call addToken(RESERVADA_TEXTO, auxLex, listaTokens)
+                    call addToken(RESERVADA_TEXTO, auxLex, listaTokens, noLinea)
                 case ('AreaTexto')
-                    call addToken(RESERVADA_AREATEXTO, auxLex, listaTokens)
+                    call addToken(RESERVADA_AREATEXTO, auxLex, listaTokens, noLinea)
                 case ('Check')
-                    call addToken(RESERVADA_CHECK, auxLex, listaTokens)
+                    call addToken(RESERVADA_CHECK, auxLex, listaTokens, noLinea)
                 case ('this')
-                    call addToken(THIS, auxLex, listaTokens)
+                    call addToken(THIS, auxLex, listaTokens, noLinea)
                 
                 ! Palabra reservada específica
                 case ("Controles")
-                    call addToken(RESERVADA_CONTROLES, auxLex, listaTokens)
+                    call addToken(RESERVADA_CONTROLES, auxLex, listaTokens, noLinea)
                 case ("Colocacion")
-                    call addToken(RESERVADA_COLOCACION, auxLex, listaTokens)
+                    call addToken(RESERVADA_COLOCACION, auxLex, listaTokens, noLinea)
                 case ("Propiedades")
-                    call addToken(RESERVADA_PROPIEDADES, auxLex, listaTokens)
+                    call addToken(RESERVADA_PROPIEDADES, auxLex, listaTokens, noLinea)
                 ! Default: cualquier otro identificador
                 case default
-                    call addToken(IDENTIFICADOR, auxLex, listaTokens)
+                    call addToken(IDENTIFICADOR, auxLex, listaTokens, noLinea)
                 end select
                 i = i - 1
                 estado = 0
@@ -117,23 +122,23 @@ subroutine escanear(entrada, listaTokens, enComentario)
         case (2)
             select case (auxLex)
             case ('!')
-                call addToken(SIGNO_ADMIRACION_C, auxLex, listaTokens)
+                call addToken(SIGNO_ADMIRACION_C, auxLex, listaTokens, noLinea)
             case ('<')
-                call addToken(SIGNO_MENOR_QUE, auxLex, listaTokens)
+                call addToken(SIGNO_MENOR_QUE, auxLex, listaTokens, noLinea)
             case ('>')
-                call addToken(SIGNO_MAYOR_QUE, auxLex, listaTokens)
+                call addToken(SIGNO_MAYOR_QUE, auxLex, listaTokens, noLinea)
             case (';')
-                call addToken(SIGNO_PUNTO_Y_COMA, auxLex, listaTokens)
+                call addToken(SIGNO_PUNTO_Y_COMA, auxLex, listaTokens, noLinea)
             case ('-')
-                call addToken(SIGNO_GUION, auxLex, listaTokens)
+                call addToken(SIGNO_GUION, auxLex, listaTokens, noLinea)
             case ('.')
-                call addToken(SIGNO_PUNTO, auxLex, listaTokens)
+                call addToken(SIGNO_PUNTO, auxLex, listaTokens, noLinea)
             case ('(')
-                call addToken(SIGNO_PARENTESIS_APERTURA, auxLex, listaTokens)
+                call addToken(SIGNO_PARENTESIS_APERTURA, auxLex, listaTokens, noLinea)
             case (')')
-                call addToken(SIGNO_PARENTESIS_CERRADURA, auxLex, listaTokens)
+                call addToken(SIGNO_PARENTESIS_CERRADURA, auxLex, listaTokens, noLinea)
             case (',')
-                call addToken(COMA, auxLex, listaTokens)
+                call addToken(COMA, auxLex, listaTokens, noLinea)
             end select
             estado = 0
             i = i - 1
@@ -150,7 +155,7 @@ subroutine escanear(entrada, listaTokens, enComentario)
             end if
         case (4)
             if (c == char(10)) then
-                call addToken(COMENTARIO_LINEA, auxLex, listaTokens)
+                call addToken(COMENTARIO_LINEA, auxLex, listaTokens, noLinea)
                 estado = 0
                 i = i - 1
             else
@@ -158,7 +163,7 @@ subroutine escanear(entrada, listaTokens, enComentario)
             end if
         case (5)
             if (c == '"') then
-                call addToken(VALOR_CADENA, auxLex, listaTokens)
+                call addToken(VALOR_CADENA, auxLex, listaTokens, noLinea)
                 estado = 0
             else
                 auxLex = auxLex // c
@@ -179,7 +184,7 @@ subroutine escanear(entrada, listaTokens, enComentario)
             if (c >= '0' .and. c <= '9') then
                 auxLex = auxLex // c
             else
-                call addToken(VALOR_NUMERICO, auxLex, listaTokens)
+                call addToken(VALOR_NUMERICO, auxLex, listaTokens, noLinea)
                 i = i - 1
                 estado = 0
             end if
@@ -187,16 +192,18 @@ subroutine escanear(entrada, listaTokens, enComentario)
     end do
 end subroutine escanear
 
-subroutine addToken(tipo, valor, listaTokens)
+subroutine addToken(tipo, valor, listaTokens, noLinea)
     integer, intent(in) :: tipo
     character(len=*), intent(inout) :: valor
     type(token), dimension(:), allocatable, intent(inout) :: listaTokens
     type(token) :: nuevoToken
     type(token), dimension(:), allocatable :: tempTokens
     integer :: tamanoActual
+    integer, intent(inout) :: noLinea
 
     nuevoToken%tipo = tipo
     nuevoToken%valor = valor
+    nuevoToken%linea = noLinea
     tamanoActual = size(listaTokens)
 
     print *, "Anadiendo token: ", trim(getTipoTokenEnString(tipo)), " con valor: ", trim(valor)

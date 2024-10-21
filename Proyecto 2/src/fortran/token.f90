@@ -12,6 +12,7 @@ module TokenModule
     type :: token
         character(len = 35) :: valor
         integer :: tipo
+        integer :: linea
     end type token
 
     integer, parameter :: RESERVADA_CONTROLES = 1

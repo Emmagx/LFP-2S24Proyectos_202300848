@@ -159,7 +159,7 @@ end subroutine parse_PropiedadesList
 subroutine parse_Propiedades()
     print *, "Iniciando parse_Propiedades en la posicion ", pos
 
-    do while (pos <= size(tokens) .and. tokens(pos)%tipo /= RESERVADA_CONTROLES)
+    do while (pos <= size(tokens) .and. tokens(pos)%tipo /= RESERVADA_PROPIEDADES)
         ! Comprobación del formato de la propiedad: IDENTIFICADOR '.' método '(' valores ')'
         
         if (.not. consumirToken(IDENTIFICADOR)) then
@@ -405,7 +405,7 @@ end subroutine parse_ColocacionBlock
 recursive subroutine parse_ColocacionList()
     print *, "Iniciando parse_ColocacionList en la posicion ", pos
     
-    if (tokens(pos)%tipo == IDENTIFICADOR) then
+    if (tokens(pos)%tipo == IDENTIFICADOR .or. tokens(pos)%tipo == THIS) then
         call parse_Colocacion()
         call parse_ColocacionList()
     else
@@ -416,18 +416,52 @@ end subroutine parse_ColocacionList
 ! Parsear cada colocación
 subroutine parse_Colocacion()
     print *, "Iniciando parse_Colocacion en la posicion ", pos
-    
-    ! Colocación: IDENTIFICADOR '.' setPosicion '(' valores ')' ';'
-    if (.not. consumirToken(IDENTIFICADOR)) call modoPanico(';')
-    if (.not. consumirToken(SIGNO_PUNTO)) call modoPanico(';')
-    if (.not. consumirToken(setPosicion)) call modoPanico(';')
-    if (.not. consumirToken(SIGNO_PARENTESIS_APERTURA)) call modoPanico(';')
-    if (.not. consumirToken(VALOR_NUMERICO)) call modoPanico(';')
-    if (.not. consumirToken(COMA)) call modoPanico(';')
-    if (.not. consumirToken(VALOR_NUMERICO)) call modoPanico(';')
-    if (.not. consumirToken(SIGNO_PARENTESIS_CERRADURA)) call modoPanico(';')
-    if (.not. consumirToken(SIGNO_PUNTO_Y_COMA)) call modoPanico(';')
-    if (.not. consumirToken(THIS)) call modoPanico(';')
+
+    do while (pos <= size(tokens) .and. tokens(pos)%tipo /= RESERVADA_COLOCACION)
+        ! Comprobación del formato de la colocación: IDENTIFICADOR '.' setPosicion '(' valores ')' ';'
+        
+        if (.not. (consumirToken(IDENTIFICADOR) .or. consumirToken(THIS))) then
+            call modoPanico(';')
+            return
+        end if
+
+        ! Consumir el signo de punto ('.')
+        if (.not. consumirToken(SIGNO_PUNTO)) then
+            call modoPanico(';')
+            return
+        end if
+        
+        ! Manejo de los diferentes métodos de colocación
+        select case (tokens(pos)%tipo)
+        case (setPosicion)
+            if (.not. consumirToken(setPosicion)) then
+                call modoPanico(';')
+                return
+            end if
+            if (.not. consumirToken(SIGNO_PARENTESIS_APERTURA)) call modoPanico(';')
+            if (.not. consumirToken(VALOR_NUMERICO)) call modoPanico(';')  ! Valor x
+            if (.not. consumirToken(COMA)) call modoPanico(';')
+            if (.not. consumirToken(VALOR_NUMERICO)) call modoPanico(';')  ! Valor y
+            if (.not. consumirToken(SIGNO_PARENTESIS_CERRADURA)) call modoPanico(';')
+            if (.not. consumirToken(SIGNO_PUNTO_Y_COMA)) call modoPanico(';')
+
+        case (add)
+            if (.not. consumirToken(add)) then
+                call modoPanico(';')
+                return
+            end if
+            if (.not. consumirToken(SIGNO_PARENTESIS_APERTURA)) call modoPanico(';')
+            if (.not. consumirToken(IDENTIFICADOR)) call modoPanico(';')
+            if (.not. consumirToken(SIGNO_PARENTESIS_CERRADURA)) call modoPanico(';')
+            if (.not. consumirToken(SIGNO_PUNTO_Y_COMA)) call modoPanico(';')
+
+        case default
+            print *, "Error sintáctico: Método desconocido en la posición ", pos
+            call modoPanico(';')
+            return
+        end select
+    end do
 end subroutine parse_Colocacion
+
 
 end module mod_analizador_sintactico

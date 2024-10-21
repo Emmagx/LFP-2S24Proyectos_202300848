@@ -1,16 +1,15 @@
 program analizador 
     use TokenModule
     use mod_analizador_lexico
-    !use mod_analizador_sintactico
+    use mod_analizador_sintactico
     use mod_utilidades
     implicit none
 
     integer :: opcion
-    character(len=350) :: cadenaEntrada
     integer :: ios
     type(token), dimension(:), allocatable :: listaTokens
     character(len=1000) :: linea
-    logical :: finArchivo
+    logical :: finArchivo, enComentario
     integer :: unidadArchivo
 
     ! Abrir el archivo
@@ -18,18 +17,18 @@ program analizador
     open(unit=unidadArchivo, file="EntradaEjemplo.LFP", status="old", action="read", iostat=ios)
     if (ios /= 0) then
         print *, "Error al abrir el archivo, ios = ", ios
+        stop
     end if
 
-    ! Inicializar la lista de tokens
+    ! Inicializar la lista de tokens y la bandera
     allocate(listaTokens(0))
+    enComentario = .false.
 
     ! Ciclo del menú
     do
         print *, "Mostrando menu principal"
-        ! Mostrar las opciones del menú
         call show_menu()
 
-        ! Leer la opción ingresada por el usuario
         print *, "Esperando entrada del usuario para seleccionar opcion..."
         read (*, *) opcion
         print *, "Opcion ingresada: ", opcion
@@ -45,19 +44,19 @@ program analizador
                     if (ios /= 0) then
                         finArchivo = .true.
                     else
-                        print *, "Analizando linea: ", trim(linea)
-                        call escanear(linea, listaTokens)
+                        print *, "Analizando línea: ", trim(linea)
+                        call escanear(linea, listaTokens, enComentario)
                     end if
                 end do
 
                 ! Imprimir la lista de tokens
-                print *, "Analisis lexico completado. Lista de tokens generada:"
+                print *, "Análisis léxico completado. Lista de tokens generada:"
                 call imprimirListaTokens(listaTokens)
 
-                ! Iniciar el análisis sintáctico (comentado hasta que actives el analizador sintáctico)
-                print *, "Iniciando analisis sintactico"
-                !call parsear(listaTokens)
-                print *, "Analisis sintactico completado"
+                ! Iniciar el análisis sintáctico
+                print *, "Iniciando análisis sintáctico"
+                call parsear(listaTokens)
+                print *, "Análisis sintáctico completado"
                 
             case (2)
                 print *, "Opcion 2 seleccionada: Saliendo del programa..."

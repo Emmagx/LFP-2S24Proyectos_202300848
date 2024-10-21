@@ -6,19 +6,22 @@ module mod_analizador_lexico
 
 contains
 
-subroutine escanear(entrada, listaTokens)
+subroutine escanear(entrada, listaTokens, enComentario)
     use TokenModule
     character(len=*), intent(inout) :: entrada
     type(token), dimension(:), allocatable, intent(inout) :: listaTokens
     integer :: i, estado, length
     character(len=1) :: c
     character(:), allocatable :: auxLex
+    logical, intent(inout) :: enComentario
 
     length = len_trim(entrada)
     estado = 0
     auxLex = ""
     i = 0
-
+    if (enComentario) then
+        estado = 6
+    end if
     ! Añadir un carácter de fin de cadena para facilitar el análisis
     entrada(length + 1: length + 1) = '#'
     length = length + 1
@@ -60,16 +63,57 @@ subroutine escanear(entrada, listaTokens)
                 auxLex = trim(auxLex) // c
             else
                 select case (trim(auxLex))
-                case ('setTexto', 'setAncho', 'setColorFondo', 'setPosicion', 'add', 'setMarcada', 'setColorLetra')
-                    call addToken(PROPIEDAD_CONTROL, auxLex, listaTokens)
-                case ('Contenedor', 'Boton', 'Clave', 'Etiqueta', 'Texto', 'AreaTexto', 'Check')
-                    call addToken(IDENTIFICADOR, auxLex, listaTokens)
+                ! Propiedades del control
+                case ('setTexto')
+                    call addToken(setTexto, auxLex, listaTokens)
+                case ('setAncho')
+                    call addToken(setAncho, auxLex, listaTokens)
+                case ('setColorFondo')
+                    call addToken(setColorFondo, auxLex, listaTokens)
+                case ('setPosicion')
+                    call addToken(setPosicion, auxLex, listaTokens)
+                case ('add')
+                    call addToken(add, auxLex, listaTokens)
+                case ('setMarcada')
+                    call addToken(setMarcada, auxLex, listaTokens)
+                case ('setColorLetra')
+                    call addToken(setColorLetra, auxLex, listaTokens)
+                case ("setAlto")
+                    call addToken(setAlto, auxLex, listaTokens)
+                
+                ! Identificadores de controles
+                case ('Contenedor')
+                    call addToken(RESERVADA_CONTENEDOR, auxLex, listaTokens)
+                case ('Boton')
+                    call addToken(RESERVADA_BOTON, auxLex, listaTokens)
+                case ('Clave')
+                    call addToken(RESERVADA_CLAVE, auxLex, listaTokens)
+                case ('Etiqueta')
+                    call addToken(RESERVADA_ETIQUETA, auxLex, listaTokens)
+                case ('Texto')
+                    call addToken(RESERVADA_TEXTO, auxLex, listaTokens)
+                case ('AreaTexto')
+                    call addToken(RESERVADA_AREATEXTO, auxLex, listaTokens)
+                case ('Check')
+                    call addToken(RESERVADA_CHECK, auxLex, listaTokens)
+                case ('this')
+                    call addToken(THIS, auxLex, listaTokens)
+                
+                ! Palabra reservada específica
+                case ("Controles")
+                    call addToken(RESERVADA_CONTROLES, auxLex, listaTokens)
+                case ("Colocacion")
+                    call addToken(RESERVADA_COLOCACION, auxLex, listaTokens)
+                case ("Propiedades")
+                    call addToken(RESERVADA_PROPIEDADES, auxLex, listaTokens)
+                ! Default: cualquier otro identificador
                 case default
                     call addToken(IDENTIFICADOR, auxLex, listaTokens)
                 end select
                 i = i - 1
                 estado = 0
             end if
+        
         case (2)
             select case (auxLex)
             case ('!')
@@ -99,6 +143,7 @@ subroutine escanear(entrada, listaTokens)
                 auxLex = trim(auxLex) // c
             else if (c == '*') then
                 estado = 6
+                enComentario = .True.
                 auxLex = trim(auxLex) // c
             else
                 estado = 0
@@ -122,14 +167,12 @@ subroutine escanear(entrada, listaTokens)
             if (c == '*') then
                 estado = 7
             else
-                auxLex = auxLex // c
             end if
         case (7)
             if (c == '/') then
-                call addToken(COMENTARIO_MULTILINEA, auxLex, listaTokens)
                 estado = 0
+                enComentario = .false.
             else
-                auxLex = auxLex // '*' // c
                 estado = 6
             end if
         case (8)
@@ -177,7 +220,7 @@ end subroutine addToken
 
 function getTipoTokenEnString(p) result(res)
     integer, intent(in) :: p
-    character(len=20) :: res
+    character(len=30) :: res
 
     select case (p)
     case (RESERVADA_CONTROLES)
@@ -215,17 +258,39 @@ function getTipoTokenEnString(p) result(res)
     case (SIGNO_PUNTO)
         res = "SIGNO_PUNTO"
     case (SIGNO_PARENTESIS_APERTURA)
-        res = "SIGNO_PARENTESIS_A"
+        res = "SIGNO_PARENTESIS_APERTURA"
     case (SIGNO_PARENTESIS_CERRADURA)
-        res = "SIGNO_PARENTESIS_C"
+        res = "SIGNO_PARENTESIS_CERRADURA"
     case (VALOR_CADENA)
         res = "VALOR_CADENA"
     case (VALOR_NUMERICO)
         res = "VALOR_NUMERICO"
     case (COMENTARIO_MULTILINEA)
-        res = "COMENTARIO_MULT"
+        res = "COMENTARIO_MULTILINEA"
     case (COMA)
         res = "COMA"
+    case (setTexto)
+        res = "setTexto"
+    case (setAncho)
+        res = "setAncho"
+    case (setColorFondo)
+        res = "setColorFondo"
+    case (setPosicion)
+        res = "setPosicion"
+    case (add)
+        res = "add"
+    case (setMarcada)
+        res = "setMarcada"
+    case (setColorLetra)
+        res = "setColorLetra"
+    case (RESERVADA_PROPIEDADES)
+        res = "RESERVADA_PROPIEDADES"
+    case (RESERVADA_COLOCACION)
+        res = 'RESERVADA_COLOCACION'
+    case (setAlto)
+        res = 'setAlto'
+    case (THIS)
+        res = 'THIS'
     case default
         res = "Desconocido"
     end select

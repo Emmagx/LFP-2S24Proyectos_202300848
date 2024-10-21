@@ -7,6 +7,8 @@ module TokenModule
     public :: RESERVADA_AREATEXTO, RESERVADA_CLAVE, RESERVADA_CONTENEDOR
     public :: COMENTARIO_MULTILINEA, PROPIEDAD_CONTROL, SIGNO_PUNTO, SIGNO_PARENTESIS_APERTURA
     public :: SIGNO_PARENTESIS_CERRADURA, VALOR_CADENA, VALOR_NUMERICO, imprimirListaTokens, COMA
+    public :: setTexto, setAncho, setColorFondo, setPosicion, add, setMarcada, setColorLetra
+    public :: RESERVADA_COLOCACION, RESERVADA_PROPIEDADES, setAlto, this
     type :: token
         character(len = 35) :: valor
         integer :: tipo
@@ -36,6 +38,17 @@ module TokenModule
     integer, parameter :: VALOR_CADENA = 22
     integer, parameter :: VALOR_NUMERICO = 23
     integer, parameter :: COMA = 24
+    integer, parameter :: setTexto = 25
+    integer, parameter :: setAncho = 26
+    integer, parameter :: setColorFondo = 27
+    integer, parameter :: setPosicion = 28
+    integer, parameter :: add = 29
+    integer, parameter :: setMarcada = 30
+    integer, parameter :: setColorLetra = 31
+    integer, parameter :: RESERVADA_COLOCACION = 32
+    integer, parameter :: RESERVADA_PROPIEDADES = 33
+    integer, parameter :: setAlto = 34
+    integer, parameter :: THIS = 35
 
     contains
     ! Subrutina para imprimir la lista de tokens

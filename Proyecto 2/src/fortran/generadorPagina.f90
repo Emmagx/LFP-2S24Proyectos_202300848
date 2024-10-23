@@ -4,7 +4,7 @@ module Generador
     contains
     subroutine generarPagina(controles, nombreArchivo)
         implicit none
-        type(Control), dimension(:), intent(in) :: controles
+        type(Control), dimension(:), intent(inout) :: controles
         character(len=*), intent(in) :: nombreArchivo
         integer :: unidadHTML
 
@@ -35,66 +35,73 @@ module Generador
     use ControlModule
     implicit none
     integer, intent(in) :: unidadHTML
-    type(Control), dimension(:), intent(in) :: controles
+    type(Control), dimension(:), intent(inout) :: controles
     integer :: i
 
     ! Recorrer los controles y generar el HTML apropiado
     do i = 1, size(controles)
-        print *, "Generando control:", trim(controles(i)%valor), "de tipo:", trim(controles(i)%tipo)
-        select case (controles(i)%tipo)
-            case ("root")
-                print *, "Procesando el root (this)"
-                ! El root ('this') no genera etiquetas adicionales, simplemente escribe el contenido
-                if (allocated(controles(i)%hijos)) then
-                    print *, "Procesando hijos del root"
-                    call generarHTMLControles(unidadHTML, controles(i)%hijos)
-                end if
+        if (.not. controles(i)%consumido) then
+            print *, "Generando control:", trim(controles(i)%valor), "de tipo:", trim(controles(i)%tipo)
 
-            case ("contenedor")
-                write(unidadHTML, '(A)') "<div id='" // trim(controles(i)%valor) // "'>"
-                print *, "Generando <div> con id:", trim(controles(i)%valor)
-                if (allocated(controles(i)%hijos)) then
-                    print *, "Procesando hijos del contenedor:", trim(controles(i)%valor)
-                    call generarHTMLControles(unidadHTML, controles(i)%hijos)
-                end if
-                write(unidadHTML, '(A)') "</div>"
+            select case (controles(i)%tipo)
+                case ("root")
+                    print *, "Procesando el root (this)"
+                    ! El root ('this') no genera etiquetas adicionales, simplemente escribe el contenido
+                    if (allocated(controles(i)%hijos)) then
+                        print *, "Procesando hijos del root"
+                        call generarHTMLControles(unidadHTML, controles(i)%hijos)
+                    end if
 
-            case ("etiqueta")
-                write(unidadHTML, '(A)') "<label id='" // trim(controles(i)%valor) // "'>" // &
-                    trim(controles(i)%valor) // "</label>"
-                print *, "Generando <label> con id:", trim(controles(i)%valor)
+                case ("contenedor")
+                    write(unidadHTML, '(A)') "<div id='" // trim(controles(i)%valor) // "'>"
+                    print *, "Generando <div> con id:", trim(controles(i)%valor)
+                    if (allocated(controles(i)%hijos)) then
+                        print *, "Procesando hijos del contenedor:", trim(controles(i)%valor)
+                        call generarHTMLControles(unidadHTML, controles(i)%hijos)
+                    end if
+                    write(unidadHTML, '(A)') "</div>"
 
-            case ("boton")
-                write(unidadHTML, '(A)') "<input type='submit' id='" // trim(controles(i)%valor) // &
-                    "' value='" // trim(controles(i)%valor) // "' />"
-                print *, "Generando <button> con id:", trim(controles(i)%valor)
+                case ("etiqueta")
+                    write(unidadHTML, '(A)') "<label id='" // trim(controles(i)%valor) // "'>" // &
+                        trim(controles(i)%valor) // "</label>"
+                    print *, "Generando <label> con id:", trim(controles(i)%valor)
 
-            case ("texto")
-                write(unidadHTML, '(A)') "<input type='text' id='" // trim(controles(i)%valor) // &
-                    "' value='" // trim(controles(i)%valor) // "' />"
-                print *, "Generando <input type='text'> con id:", trim(controles(i)%valor)
+                case ("boton")
+                    write(unidadHTML, '(A)') "<input type='submit' id='" // trim(controles(i)%valor) // &
+                        "' value='" // trim(controles(i)%valor) // "' />"
+                    print *, "Generando <button> con id:", trim(controles(i)%valor)
 
-            case ("areaTexto")
-                write(unidadHTML, '(A)') "<textarea id='" // trim(controles(i)%valor) // "'></textarea>"
-                print *, "Generando <textarea> con id:", trim(controles(i)%valor)
+                case ("texto")
+                    write(unidadHTML, '(A)') "<input type='text' id='" // trim(controles(i)%valor) // &
+                        "' value='" // trim(controles(i)%valor) // "' />"
+                    print *, "Generando <input type='text'> con id:", trim(controles(i)%valor)
 
-            case ("clave")
-                write(unidadHTML, '(A)') "<input type='password' id='" // trim(controles(i)%valor) // "' />"
-                print *, "Generando <input type='password'> con id:", trim(controles(i)%valor)
+                case ("areaTexto")
+                    write(unidadHTML, '(A)') "<textarea id='" // trim(controles(i)%valor) // "'></textarea>"
+                    print *, "Generando <textarea> con id:", trim(controles(i)%valor)
 
-            case ("check")
-                write(unidadHTML, '(A)') "<input type='checkbox' id='" // trim(controles(i)%valor) // "' />"
-                print *, "Generando <input type='checkbox'> con id:", trim(controles(i)%valor)
+                case ("clave")
+                    write(unidadHTML, '(A)') "<input type='password' id='" // trim(controles(i)%valor) // "' />"
+                    print *, "Generando <input type='password'> con id:", trim(controles(i)%valor)
 
-            case ("radioBoton")
-                write(unidadHTML, '(A)') "<input type='radio' id='" // trim(controles(i)%valor) // "' />"
-                print *, "Generando <input type='radio'> con id:", trim(controles(i)%valor)
+                case ("check")
+                    write(unidadHTML, '(A)') "<input type='checkbox' id='" // trim(controles(i)%valor) // "' />"
+                    print *, "Generando <input type='checkbox'> con id:", trim(controles(i)%valor)
 
-            ! Agregar más casos según sea necesario
-        end select
+                case ("radioBoton")
+                    write(unidadHTML, '(A)') "<input type='radio' id='" // trim(controles(i)%valor) // "' />"
+                    print *, "Generando <input type='radio'> con id:", trim(controles(i)%valor)
+
+                ! Marcar el control como procesado una vez que se haya generado
+                controles(i)%consumido = .true.
+                print *, "Marcando control como consumido:", trim(controles(i)%valor)
+
+            end select
+        else
+            print *, "Control ya procesado, no se genera:", trim(controles(i)%valor)
+        end if
     end do
 end subroutine generarHTMLControles
-
 
 
 subroutine procesarTokensToControles(listaTokens, controles)
@@ -168,10 +175,6 @@ subroutine procesarTokensToControles(listaTokens, controles)
                     controles(j)%tipo = "clave"
                 case (RESERVADA_CHECK)
                     controles(j)%tipo = "check"
-                case (RESERVADA_RADIOBOTON)
-                    controles(j)%tipo = "radioBoton"
-                case (THIS)
-                    controles(j)%tipo = "this"
             end select
         end if
     end do
@@ -194,6 +197,7 @@ subroutine procesarTokensToControles(listaTokens, controles)
 
             if (parentIdx > 0 .and. childIdx > 0) then
                 print *, "Agregando hijo:", trim(controlIds(childIdx)), "a padre:", trim(controlIds(parentIdx))
+                controles(childIdx)%agregado = .true.  ! Marcar como agregado
                 call agregarHijo(controles(parentIdx), controles(childIdx))
             else
                 print *, "Error: Control no encontrado para 'add'"
@@ -201,6 +205,7 @@ subroutine procesarTokensToControles(listaTokens, controles)
         end if
     end do
 end subroutine procesarTokensToControles
+
 
 
 integer function buscarIndiceControl(controlIds, id)

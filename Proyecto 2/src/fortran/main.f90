@@ -4,10 +4,13 @@ program analizador
     use mod_analizador_lexico
     use mod_analizador_sintactico
     use mod_utilidades
+    use Generador
+    use ControlModule
     implicit none
     integer :: ios
     type(token), dimension(:), allocatable :: listaTokens
     type(error), dimension(:), allocatable :: errores
+    type(Control), dimension(:), allocatable :: controles
     character(len=1000) :: linea
     logical :: finArchivo, enComentario
     integer :: unidadArchivo
@@ -41,7 +44,7 @@ program analizador
     end do
 
     ! Imprimir la lista de tokens
-    print *, "Analisis léxico completado. Lista de tokens generada:"
+    print *, "Analisis lexico completado. Lista de tokens generada:"
     call imprimirListaTokens(listaTokens)
 
     ! Iniciar el análisis sintáctico
@@ -51,12 +54,19 @@ program analizador
     
     ! Imprimir errores y generar reportes
     call printErrors(errores)
-    if (size(errores) > 0) then
-        call generarHTMLErrores(errores)
-    end if
-    call generarHTMLTokens(listaTokens)
+    if (size(errores) == 0) then
+        call generarHTMLTokens(listaTokens)
 
-    ! Cerrar el archivo
+        ! Procesar tokens a controles
+        call procesarTokensToControles(listaTokens, controles)
+    
+        ! Llamar a la generación de la página HTML
+        call generarPagina(controles, "pagina")
+    else
+        call generarHTMLErrores(errores)
+        
+    end if    
+
     close(unidadArchivo)
 
 end program analizador

@@ -8,7 +8,7 @@ module TokenModule
     public :: COMENTARIO_MULTILINEA, PROPIEDAD_CONTROL, SIGNO_PUNTO, SIGNO_PARENTESIS_APERTURA
     public :: SIGNO_PARENTESIS_CERRADURA, VALOR_CADENA, VALOR_NUMERICO, imprimirListaTokens, COMA
     public :: setTexto, setAncho, setColorFondo, setPosicion, add, setMarcada, setColorLetra
-    public :: RESERVADA_COLOCACION, RESERVADA_PROPIEDADES, setAlto, this
+    public :: RESERVADA_COLOCACION, RESERVADA_PROPIEDADES, setAlto, this, LOGICO
     type :: token
         character(len = 35) :: valor
         integer :: tipo
@@ -50,6 +50,7 @@ module TokenModule
     integer, parameter :: RESERVADA_PROPIEDADES = 33
     integer, parameter :: setAlto = 34
     integer, parameter :: THIS = 35
+    integer, parameter :: LOGICO = 36
 
     contains
     ! Subrutina para imprimir la lista de tokens

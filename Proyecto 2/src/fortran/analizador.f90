@@ -103,6 +103,8 @@ subroutine escanear(entrada, listaTokens, enComentario, noLinea, errores)
                     call addToken(RESERVADA_CHECK, auxLex, listaTokens, noLinea)
                 case ('this')
                     call addToken(THIS, auxLex, listaTokens, noLinea)
+                case ('true', 'false', 'False', 'True', 'TRUE', 'FALSE')
+                    call addToken(LOGICO, auxLex, listaTokens, noLinea)
                 
                 ! Palabra reservada específica
                 case ("Controles")
@@ -298,6 +300,8 @@ function getTipoTokenEnString(p) result(res)
         res = 'setAlto'
     case (THIS)
         res = 'THIS'
+    case (LOGICO)
+        res = 'LOGICO'
     case default
         res = "Desconocido"
     end select

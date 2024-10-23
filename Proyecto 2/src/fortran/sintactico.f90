@@ -250,7 +250,15 @@ subroutine parse_Propiedades(errores)
             if (.not. consumirToken(VALOR_NUMERICO)) call modoPanico(errores)
             if (.not. consumirToken(SIGNO_PARENTESIS_CERRADURA)) call modoPanico(errores)
             if (.not. consumirToken(SIGNO_PUNTO_Y_COMA)) call modoPanico(errores)
-
+        case(setMarcada)
+            if (.not. consumirToken(setMarcada)) then
+                call modoPanico(errores)
+                return
+            end if
+            if (.not. consumirToken(SIGNO_PARENTESIS_APERTURA)) call modoPanico(errores)
+            if (.not. consumirToken(LOGICO)) call modoPanico(errores)
+            if (.not. consumirToken(SIGNO_PARENTESIS_CERRADURA)) call modoPanico(errores)
+            if (.not. consumirToken(SIGNO_PUNTO_Y_COMA)) call modoPanico(errores)
         case default
             print *, "Error sintactico: Método desconocido en la posición ", pos
             call modoPanico(errores)
@@ -422,6 +430,9 @@ type(error), dimension(:), intent(inout), allocatable :: errores
     print *, "Iniciando parse_ColocacionList en la posicion ", pos
     
     if (tokens(pos)%tipo == IDENTIFICADOR .or. tokens(pos)%tipo == THIS) then
+        call parse_Colocacion(errores)
+        call parse_ColocacionList(errores)
+    else  if(tokens(pos)%tipo == THIS)  then
         call parse_Colocacion(errores)
         call parse_ColocacionList(errores)
     else

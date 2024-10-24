@@ -6,6 +6,8 @@ module ControlModule
     type(Control), dimension(:), allocatable :: hijos
     logical :: consumido = .false.  ! Nuevo atributo para evitar duplicación
     logical :: agregado = .false.
+    logical :: hijo = .false.
+    logical :: padre = .false.
     end type Control
 
 end module ControlModule

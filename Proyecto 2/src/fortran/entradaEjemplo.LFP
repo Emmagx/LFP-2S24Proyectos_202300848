@@ -6,7 +6,6 @@ Boton cmdIngresar;
 Clave pswClave;
 Etiqueta passw;
 Etiqueta Nombre;
-Texto Texto0;
 Contenedor contlogo2;
 Contenedor ContLogo1;
 Contenedor ContBody;

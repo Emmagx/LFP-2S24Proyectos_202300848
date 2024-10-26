@@ -1,0 +1,105 @@
+G = {E, N, I, P} donde:
+
+E = Conjunto de terminales
+N = Conjunto de no terminales
+I = Símbolo Inicial
+P = Producciones
+
+E = {
+    Controles
+    Propiedades
+    Colocacion
+    Etiqueta
+    Boton Check
+    RadioBoton
+    Texto
+    AreaTexto
+    Clave
+    Contenedor
+    setColorLetra
+    setAncho
+    setAlto
+    setTexto
+    setColorFondo
+    setAlineacion
+    setMarcado
+    setGrupo
+    add
+    setPosicion
+    this
+    ID
+    ;
+    .
+    (
+    )
+    ,
+    Numero
+    true
+    false
+    Cadena
+    <!--
+    -->
+}   
+
+N = {
+    Block1
+    ControlLista
+    Control
+    TIPO_Control
+
+    Block2
+    PropiedadesLista
+    Propiedad
+    Funcion
+    Alineado
+    Bool
+
+    Block3
+    colocacionLista
+    Colocacion
+    Colocado
+    Colocar
+}
+
+# Representación de la gramática
+S ::= Block1 Block2 Block3
+-----------------------------------------------------------------------------------------------------------------------------------
+Block1 ::= '<!--' 'Controles' ControlLista 'Controles' '-->'
+
+ControlLista ::= Control ControlLista | ε | COMENTARIO
+
+Control ::= TIPO_Control ID ';' | COMENTARIO
+
+TIPO_Control ::= 'Etiqueta' | 'Boton' | 'Check'
+    | 'RadioBoton' | 'Texto' | 'AreaTexto'
+    | 'Clave' | 'Contenedor'
+-----------------------------------------------------------------------------------------------------------------------------------
+Block2 ::= '<!--' 'Propiedades' PropiedadesLista 'Propiedades' '-->'
+
+PropiedadesLista ::= Propiedad PropiedadesLista | ε | COMENTARIO
+
+Propiedad ::= ID '.' Funcion ';' | COMENTARIO
+
+Funcion ::= 'setColorLetra' '(' Numero ',' Numero ',' Numero ',' ')'
+    | 'setAncho' '(' Numero ')'
+    | 'setAlto' '(' Numero ')' 
+    | 'setTexto' '(' Cadena ')'
+    | 'setColorFondo' '(' Numero ',' Numero ',' Numero ')'
+    | 'setAlineacion' '(' Alineado ')'
+    | 'setMarcado' '(' Booleano ')'
+    | 'setGrupo' '(' ID ')'
+
+Alineado ::= 'centro' | 'izquierdo' | 'derecho'
+
+Booleano ::= 'true' | 'false'
+-----------------------------------------------------------------------------------------------------------------------------------
+Block3 ::= '<!--' 'Colocacion' colocacionLista 'Colocacion' '-->'
+
+colocacionLista ::= Colocacion colocacionLista | ε | COMENTARIO
+
+Colocacion ::= ID '.' Colocar ';'
+    | 'this' '.' '(' ID ')' ';'
+    | COMENTARIO
+
+Colocar ::= 'setPosicion' '(' Numero ',' Numero ')'
+    | 'add' '(' ID ')'

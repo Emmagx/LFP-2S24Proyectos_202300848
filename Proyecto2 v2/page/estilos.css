@@ -1,0 +1,86 @@
+#contlogin{
+background-color: rgb(47,79,79);
+width: 190px;
+height: 150px;
+position: absolute;
+left: 586px;
+top: 110px;
+font-size: 12px;
+}
+#contFondo{
+background-color: rgb(64,64,64);
+width: 800px;
+height: 100px;
+position: absolute;
+left: 25px;
+top: 330px;
+font-size: 12px;
+}
+#cmdIngresar{
+position: absolute;
+left: 40px;
+top: 100px;
+width: 100px;
+height: 20px;
+text-align: left;
+font-size: 12px;
+}
+#pswClave{
+position: absolute;
+left: 67px;
+top: 48px;
+width: 100px;
+height: 20px;
+text-align: left;
+font-size: 12px;
+}
+#passw{
+color: rgb(128,128,128);
+width: 53px;
+height: 13px;
+position: absolute;
+left: 11px;
+top: 54px;
+font-size: 12px;
+}
+#Nombre{
+color: rgb(128,128,128);
+width: 44px;
+height: 13px;
+position: absolute;
+left: 8px;
+top: 21px;
+font-size: 12px;
+}
+#contlogo2{
+background-color: rgb(0,128,128);
+width: 150px;
+height: 50px;
+position: absolute;
+left: 88px;
+top: 25px;
+font-size: 12px;
+}
+#ContLogo1{
+background-color: rgb(64,64,64);
+width: 50px;
+height: 50px;
+position: absolute;
+left: 36px;
+top: 25px;
+font-size: 12px;
+}
+#ContBody{
+background-color: rgb(64,224,208);
+width: 800px;
+height: 300px;
+position: absolute;
+left: 23px;
+top: 21px;
+font-size: 12px;
+}
+body {
+width: 100px;
+height: 20px;
+font-size: 12px;
+}

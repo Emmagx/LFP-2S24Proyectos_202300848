@@ -1,0 +1,86 @@
+#contlogin {
+    position: absolute;
+    top: 110px;
+    left: 300px;
+    width: 270px;
+    height: 180px;
+    background-color: rgb(221, 230, 255);
+  }
+  #contFondo {
+    position: absolute;
+    top: 330px;
+    left: 25px;
+    width: 800px;
+    height: 100px;
+    background-color: rgb(255,239,213);
+  }
+  #pswClave {
+    position: absolute;
+    top: 48px;
+    left: 65px;
+    width: 100px;
+    height: 25px;
+  }
+  #passw {
+    position: absolute;
+    top: 54px;
+    left: 11px;
+    width: 53px;
+    height: 13px;
+    color: rgb(160,160,160);
+  }
+  #Nombre {
+    position: absolute;
+    top: 21px;
+    left: 8px;
+    width: 44px;
+    height: 13px;
+    color: rgb(160,160,160);
+  }
+  #Carnet {
+    position: absolute;
+    top: 75px;
+    left: 8px;
+    width: 44px;
+    height: 13px;
+    color: rgb(160,160,160);
+  }
+  #Texto0 {
+    position: absolute;
+    top: 20px;
+    left: 65px;
+    width: 100px;
+    height: 25px;
+  }
+  #TextoCarnet {
+    position: absolute;
+    top: 74px;
+    left: 65px;
+    width: 100px;
+    height: 25px;
+  }
+  #contlogo2 {
+    position: absolute;
+    top: 25px;
+    left: 88px;
+    width: 150px;
+    height: 50px;
+    background-color: rgb(255,218,185);
+  }
+  #ContLogo1 {
+    position: absolute;
+    top: 25px;
+    left: 36px;
+    width: 50px;
+    height: 50px;
+    background-color: rgb(0,20,155);
+  }
+  #ContBody {
+    position: absolute;
+    top: 21px;
+    left: 23px;
+    width: 800px;
+    height: 300px;
+    background-color: rgb(240,255,240);
+  }
+  
